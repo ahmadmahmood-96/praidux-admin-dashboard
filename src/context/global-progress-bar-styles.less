@@ -1,0 +1,28 @@
+.global-progress-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+.global-progress-bar-container .ant-progress-line {
+  margin-bottom: 10 !important;
+  height: 1px; /* Make the line very thin */
+}
+
+/* Target the inner bar to remove border-radius */
+.global-progress-bar-container .ant-progress-bg {
+  border-radius: 0 !important; /* Remove border-radius */
+}
+
+/* Ensure the outer container also doesn't have unexpected border-radius */
+.global-progress-bar-container .ant-progress-outer {
+  border-radius: 0 !important;
+}
+
+.ant-progress .ant-progress-inner {
+    height: 6px !important;
+    position: fixed;
+    top: 0px;
+}

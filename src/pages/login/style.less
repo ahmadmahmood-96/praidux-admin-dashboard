@@ -1,0 +1,106 @@
+
+.login-left-box,
+.login-right-box{
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-left-box{
+    background-color: var(--primary-color); 
+    .hikar-logo-image{
+        width: 100%;
+        max-width: 425px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px) saturate(180%);
+        -webkit-backdrop-filter: blur(10px) saturate(180%);
+        padding: 40px;
+        background-color: rgba(255, 255, 255, 0.41);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    }
+}
+.login-right-box{
+    background-color: var(--select-bg, #fff);
+    form{
+        padding: 30px 20px 10px 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 22px 3px #00000014;
+        min-width: 450px;
+        max-width: 600px ;
+        h1{
+            margin-bottom: 0;
+            font-size: 24px;
+        }
+        .sub-title{
+            margin-bottom: 25px;
+            display: block;
+            font-size: 16px;
+            color: var(--select-text-color, #585858);
+            font-weight: 500;
+        }
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .forgot-password {
+            font-size: 14px;
+            font-weight: 400;
+            cursor: pointer;
+            color: var(--primary-color); 
+            text-align: right;
+            margin-left: auto; /* Ensures it aligns to the right */
+            &:hover {
+                color: var(--hover-color);
+            }
+        }
+    }
+}
+.login-right-box .ant-form-item-label > label.ant-form-item-required::before {
+    display: none !important;
+}
+.login-right-box .ant-form-item-label > label.ant-form-item-required::after {
+    display:none !important;
+}
+.right-align{
+    text-align: right;
+    button{
+        margin-top: -4px;
+    }
+}
+.text-right{
+    text-align: right;
+    .ant-input-number{
+        margin-right: 0px !important;
+        min-width: 120px;
+    }
+}
+@media (max-width: 1024px) {
+    .login-right-box{
+        padding-top:20px;
+        padding-bottom: 20px;
+        form{
+            min-width: 330px;
+        }
+    }
+  }
+  @media (max-width: 768px) {
+    .login-right-box{
+        padding-top:20px;
+        padding-bottom: 30px;
+        form{
+            min-width: initial;
+        }
+    }
+    .login-left-box{
+        display: none;
+    }
+  }
+  
+[data-theme='dark'] .login-right-box form {
+    background-color: #212121;
+}
