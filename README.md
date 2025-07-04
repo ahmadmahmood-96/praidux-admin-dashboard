@@ -1,4 +1,4 @@
-# Hikar Admin Dashboard
+# Praidux Admin Dashboard
 
 To start the frontend on your local server execute this command by first going inside the directory:
 
