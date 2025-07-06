@@ -46,13 +46,21 @@ const AppLayout: React.FC = () => {
     token: { colorBgContainer, colorPrimary },
   } = theme.useToken();
   const location = useLocation();
-  useEffect(() => {
-    const pathName = location.pathname.split("/");
-    setSelectedItem(pathName[1]);
-    if (window.innerWidth <= 1024) {
-      setCollapsed(true);
-    }
-  }, [location]);
+ useEffect(() => {
+  const path = location.pathname;
+
+  if (path === "/" || path === "/add-project") {
+    setSelectedItem("");
+  } else {
+    const pathName = path.split("/")[1];
+    setSelectedItem(pathName);
+  }
+
+  if (window.innerWidth <= 1024) {
+    setCollapsed(true);
+  }
+}, [location]);
+
 
   const handleLogout = () => {
     ConfirmModal({

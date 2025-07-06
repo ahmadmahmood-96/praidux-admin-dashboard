@@ -1,0 +1,250 @@
+.Add-Project-Container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 30px;
+}
+.Project-add-heading {
+  font-family: Albert Sans;
+  font-weight: 700;
+  /* font-style: Medium; */
+  font-size: 18px;
+  leading-trim: NONE;
+  line-height: 28px;
+  letter-spacing: 0%;
+  color: #101828;
+}
+.BackNavigation {
+  padding: 7.5px 11.6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Albert Sans;
+  font-weight: 600;
+  font-size: 10.15px;
+  leading-trim: NONE;
+  line-height: 14.5px;
+  letter-spacing: 0%;
+  color: #344054;
+  box-shadow: 0px 0.72px 1.45px 0px #1018280d;
+  border: 0.72px solid #d0d5dd;
+  border-radius: 5.8px;
+  background: #fff;
+  gap: 5.8px;
+  cursor: pointer;
+}
+.ProjectNavigationhead {
+  font-family: DMSans;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 140%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #999da0;
+}
+.ProjectNavigationheaddetails {
+  font-family: DMSans;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 140%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #2b2b2b;
+}
+.AddProject-formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.Form-fields-row {
+  display: flex;
+  gap: 24px;
+}
+.Add-project-container-input1 {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+.add-form-title {
+  font-family: Albert Sans;
+  font-weight: 500;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: #344054;
+}
+.DD-FORM-INPUT-FIELD {
+  background: #ffffff;
+  padding: 12px 16px;
+  box-shadow: 0px 1px 2px 0px #1018280d;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-family: Albert Sans;
+  font-weight: 400;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  color: #344054;
+  height: 48px;
+}
+.DD-FORM-INPUT-FIELD:focus {
+  outline: none;
+  box-shadow: none;
+}
+.DD-FORM-INPUT-FIELD::placeholder {
+  color: #667085;
+  font-family: Albert Sans;
+  font-weight: 400;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+}
+/* Container and override default Antd styles */
+.search-FORM-INPUT-FIELD {
+  background: #ffffff;
+  padding: 0 !important;
+  height: 48px !important;
+  box-shadow: 0px 1px 2px 0px #1018280d;
+  border: 1px solid #d0d5dd !important;
+  border-radius: 8px !important;
+  font-family: "Albert Sans", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #344054;
+  display: flex;
+  align-items: center;
+}
+
+/* Override AntD arrow and placeholder */
+.search-FORM-INPUT-FIELD .ant-select-selection-placeholder {
+  color: #667085 !important;
+  font-family: "Albert Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.search-FORM-INPUT-FIELD .ant-select-selector {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 12px 16px !important;
+  height: 48px !important;
+  align-items: center;
+  display: flex;
+}
+
+/* Remove focus ring */
+.search-FORM-INPUT-FIELD .ant-select-focused .ant-select-selector {
+  border: none !important;
+  box-shadow: none !important;
+}
+.categories-selection-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+.categories-selection-form-title {
+  font-family: Albert Sans;
+  font-weight: 500;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: #344054;
+}
+.categories-selection-form-chechfield-title {
+  font-family: Albert Sans;
+  font-weight: 500;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  color: #344054;
+}
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #d0d5dd;
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-checkbox.checked {
+  background-color: #FF5F1F; /* or your primary color */
+  border-color: #FF5F1F;
+  position: relative;
+
+}
+.Upload-button-reuable{
+    background-color: #FF5F1F;
+    border: none;
+height: 48px;
+display: flex;
+gap: 8px;
+border-radius: 8px;
+padding-right: 20px;
+padding-left: 20px;
+font-family: Albert Sans;
+font-weight: 500;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 24px;
+letter-spacing: 0%;
+color: #FFFFFF;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+}
+.Upload-button-reuable:hover{
+    opacity: 0.8;
+}
+.selectedFileName{
+    font-family: Albert Sans;
+font-weight: 500;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 20px;
+letter-spacing: 0%;
+text-decoration: underline;
+text-decoration-style: solid;
+text-decoration-offset: 0%;
+text-decoration-thickness: 0%;
+color: #344054;
+}
+.fixed-textarea {
+  height: 100px;
+  resize: none;        /* Prevent user resizing */
+  overflow-y: auto;     /* Scroll if text exceeds height */
+}
+.Form-option-row{
+    display: flex;
+    gap: 24px;
+    width: 100%;
+}
+@media(max-width:1160px){
+    .Form-option-row{
+        flex-direction: column;
+    }
+
+}
+@media(max-width:600px){
+    .Form-fields-row{
+        flex-direction: column;
+    }
+    
+}
+
