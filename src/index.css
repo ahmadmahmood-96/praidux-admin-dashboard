@@ -1,0 +1,12 @@
+.body{
+    background-color: #FAFAFA;
+}
+
+@font-face {
+  font-family: "DMSans";
+  src: url("/public/fonts/DM_Sans/DMSans-VariableFont_opsz\,wght.ttf") format("truetype");
+}
+@font-face {
+  font-family: "satoshi";
+  src: url("/public/fonts/Satoshi_Complete/Fonts/TTF/Satoshi-Variable.ttf") format("truetype");
+}

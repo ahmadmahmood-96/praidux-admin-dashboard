@@ -1,0 +1,118 @@
+.ProjectCardDisplay{
+    /* max-width: 577px; */
+background: #FFFFFF;
+border-radius: 16px;
+width: 100%;
+display: flex;
+flex-direction: column;
+}
+.project-card-header{
+    padding: 9.5px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.Project-heading-titlwe{
+    font-family: Albert Sans;
+font-weight: 400;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 28.15px;
+letter-spacing: -0.11px;
+color: #000000;
+}
+.Project-Bottom-card{
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+.projectImageMain{
+    width: 144px;
+    height: 134px;
+}
+.ProjectCategoryMain{
+    font-family: Albert Sans;
+font-weight: 400;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 28.15px;
+letter-spacing: -0.11px;
+color: #161C2D;
+}
+.ProjectMain-Name{
+    font-family: Albert Sans;
+font-weight: 600;
+font-style: SemiBold;
+font-size: 20px;
+leading-trim: NONE;
+line-height: 36.81px;
+letter-spacing: -0.54px;
+vertical-align: middle;
+color: #161C2D;
+}
+.category-Main-wraps{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.UIUX-CATEGORY{
+    padding: 4px 10px;
+    background: #EEF4FF;
+    color: #3538CD;
+    font-family: Albert Sans;
+font-weight: 700;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 20px;
+letter-spacing: 0%;
+text-align: center;
+border-radius: 16px;
+}
+.Software-Development-CATEGORY{
+     padding: 4px 10px;
+    background: #ECFDF3;
+    color: #027A48;
+    font-family: Albert Sans;
+font-weight: 700;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 20px;
+letter-spacing: 0%;
+text-align: center;
+border-radius: 16px;
+}
+.AIML-CATEGORY{
+    padding: 4px 10px;
+    background: #FDF2FA;
+    color: #C11574;
+    font-family: Albert Sans;
+font-weight: 700;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 20px;
+letter-spacing: 0%;
+text-align: center;
+border-radius: 16px;
+}
+.CROSS-CATEGORY{
+    padding: 4px 10px;
+    background: #F9F5FF;
+    color: #6941C6;
+    font-family: Albert Sans;
+font-weight: 700;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 20px;
+letter-spacing: 0%;
+text-align: center;
+border-radius: 16px;
+}
+@media(max-width:560px){
+    .Project-Bottom-card{
+        flex-direction: column;
+    }
+    .projectImageMain{
+        width: 100%;
+    }
+}

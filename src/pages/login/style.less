@@ -1,4 +1,179 @@
-
+.MainLoginContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    background-color: #FAFAFA;
+}
+.PraiducLogoContainer{
+    padding: 19.5px 0;
+    top: 0;
+    position: fixed;
+        width: 100%;
+    align-items: center;
+    display: flex
+;
+    justify-content: center;
+}
+.Login-form-admin{
+    max-width: 447px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+.Input-email-field{
+    width: 100%;
+    background: var(--White, #FFFFFF);
+border-radius: 10px;
+border: 1px solid #EDEDED;
+padding: 16px;
+font-family: DMSans;
+font-weight: 400;
+font-size: 14px;
+line-height: 120%;
+letter-spacing: 0%;
+vertical-align: middle;
+color: #150A3D;
+}
+.Input-email-field:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #150A3D !important;
+  font-family: DMSans !important;
+  font-size: 14px !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+.Input-email-field::placeholder{
+    font-family: DMSans;
+font-weight: 400;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 120%;
+letter-spacing: 0%;
+vertical-align: middle;
+color: #999DA0;
+}
+.Input-email-field:focus {
+outline: none;
+  box-shadow: none;
+}
+.SignInLoginParidux{
+ font-family: DMSans;
+font-weight: 700;
+font-size: 40px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #150A3D;
+}
+.SignInLoginPariduxOPara{
+    font-family: DMSans;
+font-weight: 500;
+font-size: 18px;
+line-height: 120%;
+letter-spacing: 0%;
+color: #717171;
+}
+.Login-Form-container-1{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.INPUT-signIn-Container-TOP{
+    font-family: DMSans;
+font-weight: 500;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 140%;
+letter-spacing: 0%;
+color: #717171;
+}
+.SignIn-Button-Login{
+    border-radius: 40px;
+    padding: 10px 19px;
+width: fit-content;
+border: none;
+background: var(--Secondary-Color, #FF5F1F);
+font-family: satoshi;
+font-weight: 700;
+font-style: Bold;
+font-size: 15px;
+leading-trim: NONE;
+line-height: 70px;
+height: 50px;
+letter-spacing: 0%;
+text-align: center;
+vertical-align: middle;
+color: #FFFFFF;
+cursor: pointer;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+.SignIn-Button-Login:hover{
+    opacity: 0.8;
+}
+ @media(max-width:700px){
+    .Login-form-admin{
+        max-width: 100%;
+    }
+    .MainLoginContainer{
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+    .SignInLoginParidux {
+        font-size: 32px;
+    }
+    .SignInLoginPariduxOPara{
+        font-size: 16px;
+    }
+ }
+  @media(max-width:500px){
+    
+    .MainLoginContainer{
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    // .SignInLoginParidux {
+    //     font-size: 32px;
+    // }
+    .SignInLoginPariduxOPara{
+        font-size: 14px;
+        text-align: center;
+    }
+    .INPUT-signIn-Container-TOP{
+        font-size: 12px;
+    }
+ }
+  @media(max-width:500px){
+    
+   .SignInLoginParidux {
+        font-size: 28px;
+    }
+      .SignIn-Button-Login{
+        width: 100%;
+    }
+ }
+   @media(max-width:450px){
+    
+   .MainLoginContainer {
+       padding-left: 24px;
+       padding-right: 24px;
+    }
+ }
+ @media(max-width:354px){
+    .SignInLoginParidux{
+        font-size: 26px;
+    }
+ }
+  @media(max-width:336px){
+    .SignInLoginParidux{
+        font-size: 24px;
+    }
+ }
+ 
 .login-left-box,
 .login-right-box{
     min-height: 100vh;

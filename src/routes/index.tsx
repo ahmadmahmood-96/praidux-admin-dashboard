@@ -18,6 +18,7 @@ import CarConfigList from "../pages/car-config/components/makeModel/configList";
 import AddCarConfig from "../pages/car-config/components/makeModel/addConfig";
 import ColorsList from "../pages/car-config/components/colors/colorList";
 import AddColor from "../pages/car-config/components/colors/addColor";
+import AddProject from "../pages/AddProjcet/AddProject";
 
 const RenderRouter: React.FC = () => {
   return (
@@ -31,6 +32,7 @@ const RenderRouter: React.FC = () => {
             </Suspense>
           }
         />
+        
         <Route
           path="*"
           element={
@@ -63,6 +65,19 @@ const RenderRouter: React.FC = () => {
             }
           />
           <Route
+            path="add-project"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <AddProject />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+          <Route
             path="cars"
             element={
               <RoleBaseRoutes
@@ -75,6 +90,8 @@ const RenderRouter: React.FC = () => {
               />
             }
           >
+            
+
             <Route path="" element={<CarsHome />}>
               <Route index element={<CarsList />} />
               <Route path="add-car" element={<AddCar />} />
