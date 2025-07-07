@@ -1,11 +1,14 @@
-import { useState, ReactNode } from "react";
+import { useState } from "react";
 import "./AddProject.css";
 import { Select } from "antd";
-import { Upload, Switch } from "antd";
+import { Upload, Switch, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import client from "../../utils/axios";
+import LoadingSpinner from "../../components/ui/LoaderSpinner";
 const { Option } = Select;
 const AddProject = () => {
-  const  navigate = useNavigate();
+  const navigate = useNavigate();
   const [mainCategory, setMainCategory] = useState("Mobile App");
   const [selectedDesign, setSelectedDesign] = useState("");
   const [selectedDevelopment, setSelectedDevelopment] = useState("");
@@ -15,6 +18,81 @@ const AddProject = () => {
   const [videoFile, setVideoFile] = useState<any>(null);
   const [imageFiles, setImageFiles] = useState<any[]>([]);
   const [shouldList, setShouldList] = useState(false);
+  const [title, setTitle] = useState("");
+  const [projectclient, setProjectClient] = useState("");
+  const [duration, setDuration] = useState("");
+  const [downloads, setDownloads] = useState("");
+  const [description, setDescription] = useState("");
+  const queryClient = useQueryClient();
+const { mutate: submitProject, isLoading } = useMutation(
+  async () => {
+    const formData = new FormData();
+
+    formData.append("title", title);
+    formData.append("mainCategory", mainCategory);
+    formData.append("client", projectclient); 
+    formData.append("duration", duration);
+    formData.append("downloads", downloads);
+    formData.append("description", description);
+    formData.append("listOnWebsite", shouldList.toString());
+
+    const selectedCategories = [
+      selectedDesign,
+      selectedDevelopment,
+      selectedAI,
+      selectedPlatform,
+    ].filter(Boolean);
+
+    selectedCategories.forEach((cat) =>
+      formData.append("categories", cat)
+    );
+
+if (logoFile) {
+  formData.append("logo", logoFile);
+  console.log("✅ Logo file added:", logoFile);
+} else {
+  console.log("❌ No logo file selected");
+}
+
+   if (videoFile) {
+  formData.append("video", videoFile);
+}
+
+
+    
+    imageFiles.forEach((fileObj) => {
+      if (fileObj.originFileObj) {
+        formData.append("images", fileObj.originFileObj);
+      }
+    });
+
+    // Send with centralized axios client
+    const response = await client.post("/project/add-project", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress: (e:any) => {
+        const percent = Math.round((e.loaded * 100) / (e.total || 1));
+        console.log("Upload Progress:", percent + "%");
+      },
+    });
+
+    return response.data;
+  },
+  {
+    onSuccess: () => {
+      message.success("Project added successfully");
+      queryClient.invalidateQueries(["AllProjects"]);
+      navigate("/projects");
+    },
+    onError: (err: any) => {
+      const msg =
+        err?.response?.data?.message || "Something went wrong while uploading";
+      message.error(msg);
+    },
+  }
+);
+
 
   const renderOption = (
     group: string,
@@ -45,10 +123,16 @@ const AddProject = () => {
       <p className="categories-selection-form-chechfield-title">{value}</p>
     </div>
   );
-  const handleLogoChange = (info: any) => {
-    if (info.file.status !== "removed") setLogoFile(info.file);
-    else setLogoFile(null);
-  };
+const handleLogoChange = (info: any) => {
+  console.log("handleLogoChange:", info); // Add this line
+  if (info.file.status !== "removed") {
+    console.log("Logo file set:", info.file);
+    setLogoFile(info.file);
+  } else {
+    setLogoFile(null);
+  }
+};
+
 
   const handleVideoChange = (info: any) => {
     if (info.file.status !== "removed") setVideoFile(info.file);
@@ -61,7 +145,7 @@ const AddProject = () => {
 
   return (
     <>
-      {/* <LoadingSpinner isLoading={isLoading} /> */}
+      <LoadingSpinner isLoading={isLoading} />
       <div className="Add-Project-Container">
         <p className="Project-add-heading">Projects</p>
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -80,7 +164,12 @@ const AddProject = () => {
             <div className="Form-fields-row">
               <div className="Add-project-container-input1">
                 <p className="add-form-title">Title</p>
-                <input className="DD-FORM-INPUT-FIELD" placeholder="Title" />
+                <input
+                  className="DD-FORM-INPUT-FIELD"
+                  placeholder="Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
               </div>
               <div className="Add-project-container-input1">
                 <p className="add-form-title">Main Category</p>
@@ -103,11 +192,21 @@ const AddProject = () => {
             <div className="Form-fields-row">
               <div className="Add-project-container-input1">
                 <p className="add-form-title">Client</p>
-                <input className="DD-FORM-INPUT-FIELD" placeholder="Client" />
+                <input
+                  className="DD-FORM-INPUT-FIELD"
+                  placeholder="Client"
+                  value={projectclient}
+                  onChange={(e) => setProjectClient(e.target.value)}
+                />
               </div>
               <div className="Add-project-container-input1">
                 <p className="add-form-title">Duration</p>
-                <input className="DD-FORM-INPUT-FIELD" placeholder="Duration" />
+                <input
+                  className="DD-FORM-INPUT-FIELD"
+                  placeholder="Duration"
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                />
               </div>
             </div>
             <div className="Form-fields-row">
@@ -116,6 +215,8 @@ const AddProject = () => {
                 <input
                   className="DD-FORM-INPUT-FIELD"
                   placeholder="Downloads"
+                  value={downloads}
+                  onChange={(e) => setDownloads(e.target.value)}
                 />
               </div>
               <div className="Add-project-container-input1">
@@ -373,6 +474,8 @@ const AddProject = () => {
             <div className="Add-project-container-input1">
               <p className="add-form-title">How can we help?</p>
               <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 className="DD-FORM-INPUT-FIELD fixed-textarea"
                 placeholder="Tell us a little about the project..."
                 rows={4} // You can increase/decrease rows as needed
@@ -391,6 +494,15 @@ const AddProject = () => {
                 checked={shouldList}
                 onChange={(checked) => setShouldList(checked)}
               />
+            </div>
+            <div style={{ textAlign: "right", marginTop: 24 }}>
+              <button
+                className="ButonSubmit"
+                onClick={() => submitProject()}
+                disabled={isLoading}
+              >
+                {isLoading ? <span className="dots-loader"><span>.</span><span>.</span><span>.</span></span>: "Submit Request"}
+              </button>
             </div>
           </div>
         </div>

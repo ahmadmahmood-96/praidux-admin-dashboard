@@ -56,7 +56,7 @@ color: #161C2D;
     gap: 10px;
     flex-wrap: wrap;
 }
-.UIUX-CATEGORY{
+.design-tag{
     padding: 4px 10px;
     background: #EEF4FF;
     color: #3538CD;
@@ -69,7 +69,7 @@ letter-spacing: 0%;
 text-align: center;
 border-radius: 16px;
 }
-.Software-Development-CATEGORY{
+.development-tag{
      padding: 4px 10px;
     background: #ECFDF3;
     color: #027A48;
@@ -82,7 +82,7 @@ letter-spacing: 0%;
 text-align: center;
 border-radius: 16px;
 }
-.AIML-CATEGORY{
+.ai-tag{
     padding: 4px 10px;
     background: #FDF2FA;
     color: #C11574;
@@ -95,7 +95,7 @@ letter-spacing: 0%;
 text-align: center;
 border-radius: 16px;
 }
-.CROSS-CATEGORY{
+.platform-tag{
     padding: 4px 10px;
     background: #F9F5FF;
     color: #6941C6;
@@ -108,7 +108,7 @@ letter-spacing: 0%;
 text-align: center;
 border-radius: 16px;
 }
-@media(max-width:560px){
+@media(max-width:500px){
     .Project-Bottom-card{
         flex-direction: column;
     }

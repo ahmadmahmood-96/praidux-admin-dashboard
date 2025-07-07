@@ -14,14 +14,31 @@ const ProjectCard = ({
   onPause,
   onEdit,
 }: any) => {
+  const categoryToGroupMap: Record<string, string> = {
+    // Design
+    "UIUX Design": "design",
+    Wireframe: "design",
+    "User research": "design",
+
+    // Development
+    "Mobile Development": "development",
+    "Web Development": "development",
+    "Software Development": "development",
+
+    // AI
+    "Custom AI Model": "ai",
+    "Open Source AI Model": "ai",
+    "ML & AI": "ai",
+
+    // Platform
+    Mobile: "platform",
+    Web: "platform",
+    "Cross platform": "platform",
+  };
+
   const getCategoryClass = (category: string) => {
-    const map: Record<string, string> = {
-      UIUX: "UIUX-CATEGORY",
-      "Software Development": "Software-Development-CATEGORY",
-      "AI ML": "AIML-CATEGORY",
-      "Cross Platform": "CROSS-CATEGORY",
-    };
-    return map[category] || "default-category";
+    const group = categoryToGroupMap[category] || "default";
+    return `category-tag ${group}-tag`; // returns e.g. "category-tag design-tag"
   };
 
   const menu = (
@@ -41,7 +58,7 @@ const ProjectCard = ({
   return (
     <div className="ProjectCardDisplay">
       <div className="project-card-header">
-        <p className="Project-heading-titlwe">{title}</p>
+        <p className="Project-heading-titlwe">Select Project</p>
         <img
           src={
             checked

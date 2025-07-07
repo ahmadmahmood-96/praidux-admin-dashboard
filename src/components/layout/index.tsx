@@ -49,7 +49,7 @@ const AppLayout: React.FC = () => {
  useEffect(() => {
   const path = location.pathname;
 
-  if (path === "/" || path === "/add-project") {
+  if (path === "/" || path === "/add-project" ||   path.startsWith("/update-project/")) {
     setSelectedItem("");
   } else {
     const pathName = path.split("/")[1];

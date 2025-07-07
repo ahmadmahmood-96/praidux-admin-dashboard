@@ -1,54 +1,29 @@
-import { useState, ReactNode } from "react";
-import { DatePicker, Row, Col, message } from "antd";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import client from "../utils/axios";
 import { useQuery } from "react-query";
 import LoadingSpinner from "../components/ui/LoaderSpinner";
-import StatsCard from "../components/cards/StatsCard";
-import { EyeOutlined, UserOutlined } from "@ant-design/icons";
-import DescriptionTitle from "../components/ui/DescriptionTitle";
 import "./dashboard.css";
+import { message } from "antd";
 import ProjectCard from "../components/projectCard/projectCardDisplay";
-const { RangePicker } = DatePicker;
-
-interface Stats {
-  totalVisits: number;
-  uniqueVisitors: number;
-  startDate?: string;
-  endDate?: string;
-}
-
-interface StatsCardConfig {
-  title: string;
-  key: string; // the key from the stats object (e.g. "totalVisits")
-  value: number;
-  icon: ReactNode;
-  iconColor?: string;
-}
-
-const fetchVisitStats = async (
-  startDate?: string,
-  endDate?: string
-): Promise<Stats> => {
-  try {
-    const { data } = await client.get<Stats>("visit/stats", {
-      params: {
-        startDate,
-        endDate,
-      },
-    });
-    return data;
-  } catch (err) {
-    message.error("Failed to fetch stats");
-    throw err;
-  }
-};
-
+import { ConfirmModal } from "../components/ui/index.tsx";
 const Dashboard = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const categoryMap: { [key: string]: string } = {
+    All: "All",
+    Mobile: "Mobile App",
+    Web: "Web",
+    IOS: "IOS",
+  };
+
+  const fetchProjects = async () => {
+    const { data } = await client.get("/project/view-project");
+    console.log("result of Project", data.result);
+    return data.result;
+  };
 
   const toggleCheck = (id: string) => {
     setSelectedIds((prev) =>
@@ -56,43 +31,77 @@ const navigate = useNavigate();
     );
   };
 
-  const handleDelete = () => {
-    console.log("Deleting:", selectedIds);
-    // Add your delete API logic here
+  const handleDelete = (id?: string) => {
+    const idsToDelete = id ? [id] : selectedIds;
+
+    ConfirmModal({
+      className: "delete-modal",
+      title: "Delete Project",
+      content: "Are you sure you want to delete the selected project?",
+      okText: "Delete",
+      cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          await Promise.all(
+            idsToDelete.map((projectId) =>
+              client.delete(`/project/delete-project/${projectId}`)
+            )
+          );
+          console.log("Deleted:", idsToDelete);
+          setSelectedIds([]);
+          await refetch();
+        } catch (error) {
+          console.error("Failed to delete:", error);
+        }
+      },
+      onCancel: () => {
+        console.log("Delete cancelled");
+      },
+      okButtonProps: {
+        className: "orange-button", // 👈 Add your class here
+      },
+    });
   };
 
-  const handlePause = () => {
-    console.log("Pausing:", selectedIds);
-    // Add your pause API logic here
+  const handlePause = async (id?: string) => {
+    const idsToPause = id ? [id] : selectedIds;
+
+    try {
+      await Promise.all(
+        idsToPause.map((projectId) =>
+          client.put(`/project/update-list-status/${projectId}`, {
+            listOnWebsite: false,
+          })
+        )
+      );
+      message.success("Project paused.");
+      setSelectedIds([]);
+      await refetch();
+    } catch (err) {
+      console.error("Pause error:", err);
+      message.error("Failed to pause project(s).");
+    }
   };
-  const dummyProjects = [
-    {
-      id: "1",
-      title: "Gradient Website",
-      mainCategory: "Mobile App",
-      categories: ["UIUX", "Software Development", "AI ML", "Cross Platform"],
-      image: "/Images/Project/projectImg.png",
-    },
-    {
-      id: "2",
-      title: "AI Chatbot",
-      mainCategory: "AI/ML",
-      categories: ["UIUX", "Software Development", "AI ML", "Cross Platform"],
-      image: "/Images/Project/projectImg.png",
-    },
-  ];
-  // const { data: stats, isLoading } = useQuery(
 
-  // );
+  const {
+    data: projects = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery(["AllProjects"], fetchProjects);
+  const filteredProjects = projects.filter((proj: any) => {
+    const matchesCategory =
+      categoryMap[selectedCategory] === "All" ||
+      proj.mainCategory === categoryMap[selectedCategory];
 
-  // const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
-  //   if (dates?.[0] && dates?.[1]) {
-  //     setDateRange([dates[0], dates[1]]);
-  //   } else {
-  //     setDateRange(null);
-  //   }
-  // };
+    const matchesSearch = proj.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
 
+    return matchesCategory && matchesSearch;
+  });
+
+  if (isLoading) return <LoadingSpinner isLoading={true} />;
   return (
     <>
       {/* <LoadingSpinner isLoading={isLoading} /> */}
@@ -136,12 +145,14 @@ const navigate = useNavigate();
           >
             <p className="Project-Dashboard-heading">Projects</p>
             <div className="button-categories-project">
-              {["All", "Mobile", "AI ML", "Chatbot"].map((label, index) => (
+              {Object.keys(categoryMap).map((label, index) => (
                 <button
                   key={label}
                   className={`category-button ${
                     selectedCategory === label ? "selected" : ""
-                  } ${index === 0 ? "first" : ""} ${index === 3 ? "last" : ""}`}
+                  } ${index === 0 ? "first" : ""} ${
+                    index === Object.keys(categoryMap).length - 1 ? "last" : ""
+                  }`}
                   onClick={() => setSelectedCategory(label)}
                 >
                   {label}
@@ -152,11 +163,18 @@ const navigate = useNavigate();
           <div style={{ display: "flex", gap: "10px" }} className="addsearch">
             <div className="search-project-main-div">
               <img src="/Images/Project/search.svg" alt="search" />
-              <input placeholder="Search here..." className="Search-project" />
+              <input
+                placeholder="Search here..."
+                className="Search-project"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
               <img src="/Images/Project/SearchKey.svg" alt="search" />
             </div>
-            <button className="Add-projectbutton"
-             onClick={() => navigate("add-project")}>
+            <button
+              className="Add-projectbutton"
+              onClick={() => navigate("add-project")}
+            >
               Add Project
             </button>
           </div>
@@ -170,28 +188,31 @@ const navigate = useNavigate();
               gap: "10px",
             }}
           >
-            <button className="Add-projectbutton" onClick={handlePause}>
+            <button className="Add-projectbutton" onClick={() => handlePause()}>
               Pause
             </button>
-            <button className="Add-projectbutton" onClick={handleDelete}>
+            <button
+              className="Add-projectbutton"
+              onClick={() => handleDelete()}
+            >
               Delete
             </button>
           </div>
         )}
         <div className="project-card-containers">
-          {dummyProjects.map((project) => (
+          {filteredProjects.map((project: any) => (
             <ProjectCard
-              key={project.id}
+              key={project._id}
               title={project.title}
               mainCategory={project.mainCategory}
               categories={project.categories}
-              image={project.image}
-              checked={selectedIds.includes(project.id)}
-              onToggleCheck={() => toggleCheck(project.id)}
-              onMoreInfo={() => console.log("More info about:", project.id)}
-              onDelete={() => console.log("Delete")}
-              onPause={() => console.log("Pause")}
-              onEdit={() => console.log("Edit")}
+              image={project.logo}
+              checked={selectedIds.includes(project._id)}
+              onToggleCheck={() => toggleCheck(project._id)}
+              onMoreInfo={() => console.log("More info about:", project._id)}
+              onDelete={() => handleDelete(project._id)}
+              onPause={() => handlePause(project._id)}
+              onEdit={() => navigate(`/update-project/${project._id}`)}
             />
           ))}
         </div>

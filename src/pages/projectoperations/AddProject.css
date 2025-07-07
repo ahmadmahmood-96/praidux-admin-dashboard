@@ -212,6 +212,29 @@ cursor: pointer;
 .Upload-button-reuable:hover{
     opacity: 0.8;
 }
+.ButonSubmit{
+     background-color: #123042;
+    border: none;
+height: 43px;
+display: flex;
+gap: 8px;
+border-radius: 40px;
+padding-right: 24px;
+padding-left: 24px;
+font-family: Albert Sans;
+font-weight: 700;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 24px;
+letter-spacing: 0%;
+color: #FFFFFF;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+}
+.ButonSubmit:hover{
+  opacity: 0.8;
+}
 .selectedFileName{
     font-family: Albert Sans;
 font-weight: 500;

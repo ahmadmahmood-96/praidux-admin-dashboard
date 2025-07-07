@@ -73,7 +73,8 @@ const Login = () => {
 
             {/* Sign In button */}
             <button className="SignIn-Button-Login" onClick={handleLogin} disabled={loading}>
-              {loading ? "Signing in..." : "Sign in"}
+             {loading ? <span className="dots-loader"><span>.</span><span>.</span><span>.</span></span> : "Sign in"}
+
               {!loading && <img src="/Images/SignIn/sideArrow.svg" alt="Arrow" />}
             </button>
           </div>

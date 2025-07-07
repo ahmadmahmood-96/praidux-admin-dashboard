@@ -18,8 +18,9 @@ import CarConfigList from "../pages/car-config/components/makeModel/configList";
 import AddCarConfig from "../pages/car-config/components/makeModel/addConfig";
 import ColorsList from "../pages/car-config/components/colors/colorList";
 import AddColor from "../pages/car-config/components/colors/addColor";
-import AddProject from "../pages/AddProjcet/AddProject";
-
+import AddProject from "../pages/projectoperations/AddProject";
+import UpdateProject from "../pages/projectoperations/UpdateProject";
+import FAQS from "../pages/FAQS/Faqs";
 const RenderRouter: React.FC = () => {
   return (
     <Routes>
@@ -71,6 +72,32 @@ const RenderRouter: React.FC = () => {
                 element={
                   <Suspense fallback={<Spin className="app-loading-wrapper" />}>
                     <AddProject />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+           <Route
+           path="update-project/:id"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <UpdateProject />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+           <Route
+            path="Faqs"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <FAQS />
                   </Suspense>
                 }
                 allowedRoles={["admin"]}
