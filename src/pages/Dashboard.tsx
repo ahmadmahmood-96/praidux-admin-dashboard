@@ -20,7 +20,7 @@ const Dashboard = () => {
   };
 
   const fetchProjects = async () => {
-    const { data } = await client.get("/project/view-project");
+    const { data } = await client.get("/project/view-projects");
     console.log("result of Project", data.result);
     return data.result;
   };

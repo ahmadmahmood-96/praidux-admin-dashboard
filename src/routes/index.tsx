@@ -21,6 +21,8 @@ import AddColor from "../pages/car-config/components/colors/addColor";
 import AddProject from "../pages/projectoperations/AddProject";
 import UpdateProject from "../pages/projectoperations/UpdateProject";
 import FAQS from "../pages/FAQS/Faqs";
+import AddFaq from "../pages/FAQS/AddFAQ/AddFaq";
+import UpdateFaq from "../pages/FAQS/updateFaq/updateFaq";
 const RenderRouter: React.FC = () => {
   return (
     <Routes>
@@ -33,7 +35,7 @@ const RenderRouter: React.FC = () => {
             </Suspense>
           }
         />
-        
+
         <Route
           path="*"
           element={
@@ -78,8 +80,8 @@ const RenderRouter: React.FC = () => {
               />
             }
           ></Route>
-           <Route
-           path="update-project/:id"
+          <Route
+            path="update-project/:id"
             element={
               <RoleBaseRoutes
                 element={
@@ -91,7 +93,7 @@ const RenderRouter: React.FC = () => {
               />
             }
           ></Route>
-           <Route
+          <Route
             path="Faqs"
             element={
               <RoleBaseRoutes
@@ -105,6 +107,33 @@ const RenderRouter: React.FC = () => {
             }
           ></Route>
           <Route
+            path="add-Faq"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <AddFaq />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+          <Route
+  path="update-faq/:id"
+  element={
+    <RoleBaseRoutes
+      element={
+        <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+          <UpdateFaq />
+        </Suspense>
+      }
+      allowedRoles={["admin"]}
+    />
+  }
+ ></Route>
+
+          <Route
             path="cars"
             element={
               <RoleBaseRoutes
@@ -117,8 +146,6 @@ const RenderRouter: React.FC = () => {
               />
             }
           >
-            
-
             <Route path="" element={<CarsHome />}>
               <Route index element={<CarsList />} />
               <Route path="add-car" element={<AddCar />} />

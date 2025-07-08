@@ -29,13 +29,14 @@ const FAQS = () => {
             </div>
             <button
               className="Add-projectbutton"
-              onClick={() => navigate("add-Faq")}
+              onClick={() => navigate("/add-Faq")}
             >
               Add FAQ
             </button>
           </div>
         </div>
-        <FaqTable />
+     <FaqTable searchQuery={searchQuery} />
+
       </div>
     </>
   );

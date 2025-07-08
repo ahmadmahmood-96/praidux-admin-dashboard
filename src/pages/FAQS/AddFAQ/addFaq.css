@@ -1,0 +1,88 @@
+.AddFaqContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 30px;
+}
+.Add-Faq-Header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.Add-Faq-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.Add-Input-form-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.Add-Input-form-con-para {
+  font-family: Albert Sans;
+  font-weight: 500;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: #344054;
+}
+.add-input-question {
+  width: 100%;
+  padding-top: 12px;
+  padding-right: 16px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  box-shadow: 0px 1px 2px 0px #1018280d;
+  font-family: Albert Sans;
+  font-weight: 400;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  color: #344054;
+}
+.add-input-question::placeholder {
+  font-family: Albert Sans;
+  font-weight: 400;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  color: #667085;
+}
+.add-input-question:focus {
+  outline: none;
+  box-shadow: none;
+}
+.Add-faq-button {
+  background: #123042;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-right: 24px;
+  padding-left: 24px;
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  border-radius: 40px;
+  cursor: pointer;
+  font-family: Albert Sans;
+font-weight: 700;
+font-style: Bold;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 100%;
+letter-spacing: 0%;
+color: #FFFFFF;
+border: none;
+width: fit-content;
+}
+.Add-faq-button:hover{
+    opacity: 0.8;
+}

@@ -5,7 +5,11 @@ import { IoCarSportOutline } from "react-icons/io5";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { GrHomeRounded } from "react-icons/gr";
 import { RiListSettingsFill } from "react-icons/ri";
-import { FileTextOutlined, QuestionCircleOutlined, CommentOutlined } from "@ant-design/icons";
+import {
+  FileTextOutlined,
+  QuestionCircleOutlined,
+  CommentOutlined,
+} from "@ant-design/icons";
 
 import { Layout, Menu, Button, theme, Dropdown, Avatar } from "antd";
 import { Link, useLocation, Outlet } from "react-router-dom";
@@ -41,26 +45,36 @@ const AppLayout: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   const [selectedItem, setSelectedItem] = useState("");
   const {
     token: { colorBgContainer, colorPrimary },
   } = theme.useToken();
   const location = useLocation();
- useEffect(() => {
-  const path = location.pathname;
+  useEffect(() => {
+    const path = location.pathname;
+    let pathName = path.split("/")[1];
 
-  if (path === "/" || path === "/add-project" ||   path.startsWith("/update-project/")) {
-    setSelectedItem("");
-  } else {
-    const pathName = path.split("/")[1];
-    setSelectedItem(pathName);
-  }
+    // Normalize special sub-routes (like add-Faq/edit-Faq) to match their parent menu key
+    if (["add-Faq", "update-faq"].includes(pathName)) {
+      pathName = "faqs";
+    }
 
-  if (window.innerWidth <= 1024) {
-    setCollapsed(true);
-  }
-}, [location]);
+    // Handle blank paths
+    if (
+      path === "/" ||
+      path === "/add-project" ||
+      path.startsWith("/update-project/")
+    ) {
+      setSelectedItem("");
+    } else {
+      setSelectedItem(pathName);
+    }
 
+    if (window.innerWidth <= 1024) {
+      setCollapsed(true);
+    }
+  }, [location]);
 
   const handleLogout = () => {
     ConfirmModal({
@@ -74,33 +88,32 @@ const AppLayout: React.FC = () => {
   };
 
   const allowedRolesByMenuItem: { [key: string]: string[] } = {
-  // cars: ["admin"],
-  // "car-config": ["admin"],
-  // users: ["admin"],
-  testimonials: ["admin"],
-  faqs: ["admin"],
-  blog: ["admin"],
-};
+    // cars: ["admin"],
+    // "car-config": ["admin"],
+    // users: ["admin"],
+    testimonials: ["admin"],
+    faqs: ["admin"],
+    blog: ["admin"],
+  };
 
-
- const getMenuIcon = (menuItem: string) => {
-  switch (menuItem) {
-    // case "cars":
-    //   return <IoCarSportOutline />;
-    // case "car-config":
-    //   return <RiListSettingsFill />;
-    // case "users":
-    //   return <HiOutlineUsers />;
-    case "testimonials":
-      return <CommentOutlined />;
-    case "faqs":
-      return <QuestionCircleOutlined />;
-    case "blog":
-      return <FileTextOutlined />;
-    default:
-      return null;
-  }
-};
+  const getMenuIcon = (menuItem: string) => {
+    switch (menuItem) {
+      // case "cars":
+      //   return <IoCarSportOutline />;
+      // case "car-config":
+      //   return <RiListSettingsFill />;
+      // case "users":
+      //   return <HiOutlineUsers />;
+      case "testimonials":
+        return <CommentOutlined />;
+      case "faqs":
+        return <QuestionCircleOutlined />;
+      case "blog":
+        return <FileTextOutlined />;
+      default:
+        return null;
+    }
+  };
 
   const formatMenuItemName = (menuItem: string) => {
     return menuItem
