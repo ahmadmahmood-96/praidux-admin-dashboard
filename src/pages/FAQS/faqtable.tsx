@@ -203,8 +203,8 @@ const paginatedData = filteredData.slice(
             <Button
               key={page}
               size="small"
-              variant={page === currentPage ? "solid" : "text"}
-              sx={{ minWidth: 32, height: 32 }}
+              type={page === currentPage ? "primary" : "default"}
+              style={{ minWidth: 32, height: 32 }}
               onClick={() => setCurrentPage(page as number)}
             >
               {page}
