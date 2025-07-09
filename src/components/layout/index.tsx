@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { RiMenuFoldLine, RiMenuUnfoldLine } from "react-icons/ri";
-import { IoCarSportOutline } from "react-icons/io5";
-import { HiOutlineUsers } from "react-icons/hi2";
 import { GrHomeRounded } from "react-icons/gr";
-import { RiListSettingsFill } from "react-icons/ri";
 import {
   FileTextOutlined,
   QuestionCircleOutlined,
@@ -93,7 +90,7 @@ const AppLayout: React.FC = () => {
     // users: ["admin"],
     testimonials: ["admin"],
     faqs: ["admin"],
-    blog: ["admin"],
+    blogs: ["admin"],
   };
 
   const getMenuIcon = (menuItem: string) => {
@@ -108,7 +105,7 @@ const AppLayout: React.FC = () => {
         return <CommentOutlined />;
       case "faqs":
         return <QuestionCircleOutlined />;
-      case "blog":
+      case "blogs":
         return <FileTextOutlined />;
       default:
         return null;

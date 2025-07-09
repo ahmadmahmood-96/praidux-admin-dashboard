@@ -146,7 +146,10 @@ const UpdateProject = () => {
         alignItems: "center",
         cursor: "pointer",
       }}
-      onClick={() => setSelected(value)}
+     onClick={() => {
+        console.log(`Selected category from ${group}:`, value);
+        setSelected(value);
+      }}
     >
       <div className={`custom-checkbox ${selected === value ? "checked" : ""}`}>
         {selected === value && (

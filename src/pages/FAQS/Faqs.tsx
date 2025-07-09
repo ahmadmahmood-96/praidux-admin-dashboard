@@ -1,9 +1,5 @@
 import { useState } from "react";
-import client from "../../utils/axios";
-import { useQuery } from "react-query";
-import LoadingSpinner from "../../components/ui/LoaderSpinner";
 import "./faq.css";
-import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import FaqTable from "./faqtable"
 const FAQS = () => {

@@ -3,7 +3,7 @@ import "./AddProject.css";
 import { Select } from "antd";
 import { Upload, Switch, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import client from "../../utils/axios";
 import LoadingSpinner from "../../components/ui/LoaderSpinner";
 const { Option } = Select;
@@ -24,75 +24,71 @@ const AddProject = () => {
   const [downloads, setDownloads] = useState("");
   const [description, setDescription] = useState("");
   const queryClient = useQueryClient();
-const { mutate: submitProject, isLoading } = useMutation(
-  async () => {
-    const formData = new FormData();
+  const { mutate: submitProject, isLoading } = useMutation(
+    async () => {
+      const formData = new FormData();
 
-    formData.append("title", title);
-    formData.append("mainCategory", mainCategory);
-    formData.append("client", projectclient); 
-    formData.append("duration", duration);
-    formData.append("downloads", downloads);
-    formData.append("description", description);
-    formData.append("listOnWebsite", shouldList.toString());
+      formData.append("title", title);
+      formData.append("mainCategory", mainCategory);
+      formData.append("client", projectclient);
+      formData.append("duration", duration);
+      formData.append("downloads", downloads);
+      formData.append("description", description);
+      formData.append("listOnWebsite", shouldList.toString());
 
-    const selectedCategories = [
-      selectedDesign,
-      selectedDevelopment,
-      selectedAI,
-      selectedPlatform,
-    ].filter(Boolean);
+      const selectedCategories = [
+        selectedDesign,
+        selectedDevelopment,
+        selectedAI,
+        selectedPlatform,
+      ].filter(Boolean);
 
-    selectedCategories.forEach((cat) =>
-      formData.append("categories", cat)
-    );
+      selectedCategories.forEach((cat) => formData.append("categories", cat));
 
-if (logoFile) {
-  formData.append("logo", logoFile);
-  console.log("✅ Logo file added:", logoFile);
-} else {
-  console.log("❌ No logo file selected");
-}
-
-   if (videoFile) {
-  formData.append("video", videoFile);
-}
-
-
-    
-    imageFiles.forEach((fileObj) => {
-      if (fileObj.originFileObj) {
-        formData.append("images", fileObj.originFileObj);
+      if (logoFile) {
+        formData.append("logo", logoFile);
+        console.log("✅ Logo file added:", logoFile);
+      } else {
+        console.log("❌ No logo file selected");
       }
-    });
 
-    // Send with centralized axios client
-    const response = await client.post("/project/add-project", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      onUploadProgress: (e:any) => {
-        const percent = Math.round((e.loaded * 100) / (e.total || 1));
-        console.log("Upload Progress:", percent + "%");
-      },
-    });
+      if (videoFile) {
+        formData.append("video", videoFile);
+      }
 
-    return response.data;
-  },
-  {
-    onSuccess: () => {
-      message.success("Project added successfully");
-      queryClient.invalidateQueries(["AllProjects"]);
-      navigate("/projects");
+      imageFiles.forEach((fileObj) => {
+        if (fileObj.originFileObj) {
+          formData.append("images", fileObj.originFileObj);
+        }
+      });
+
+      // Send with centralized axios client
+      const response = await client.post("/project/add-project", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (e: any) => {
+          const percent = Math.round((e.loaded * 100) / (e.total || 1));
+          console.log("Upload Progress:", percent + "%");
+        },
+      });
+
+      return response.data;
     },
-    onError: (err: any) => {
-      const msg =
-        err?.response?.data?.message || "Something went wrong while uploading";
-      message.error(msg);
-    },
-  }
-);
-
+    {
+      onSuccess: () => {
+        message.success("Project added successfully");
+        queryClient.invalidateQueries(["AllProjects"]);
+        navigate("/projects");
+      },
+      onError: (err: any) => {
+        const msg =
+          err?.response?.data?.message ||
+          "Something went wrong while uploading";
+        message.error(msg);
+      },
+    }
+  );
 
   const renderOption = (
     group: string,
@@ -108,7 +104,10 @@ if (logoFile) {
         alignItems: "center",
         cursor: "pointer",
       }}
-      onClick={() => setSelected(value)}
+      onClick={() => {
+        console.log(`Selected category from ${group}:`, value);
+        setSelected(value);
+      }}
     >
       <div className={`custom-checkbox ${selected === value ? "checked" : ""}`}>
         {selected === value && (
@@ -123,16 +122,15 @@ if (logoFile) {
       <p className="categories-selection-form-chechfield-title">{value}</p>
     </div>
   );
-const handleLogoChange = (info: any) => {
-  console.log("handleLogoChange:", info); // Add this line
-  if (info.file.status !== "removed") {
-    console.log("Logo file set:", info.file);
-    setLogoFile(info.file);
-  } else {
-    setLogoFile(null);
-  }
-};
-
+  const handleLogoChange = (info: any) => {
+    console.log("handleLogoChange:", info); // Add this line
+    if (info.file.status !== "removed") {
+      console.log("Logo file set:", info.file);
+      setLogoFile(info.file);
+    } else {
+      setLogoFile(null);
+    }
+  };
 
   const handleVideoChange = (info: any) => {
     if (info.file.status !== "removed") setVideoFile(info.file);
@@ -501,7 +499,15 @@ const handleLogoChange = (info: any) => {
                 onClick={() => submitProject()}
                 disabled={isLoading}
               >
-                {isLoading ? <span className="dots-loader"><span>.</span><span>.</span><span>.</span></span>: "Submit Request"}
+                {isLoading ? (
+                  <span className="dots-loader">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </span>
+                ) : (
+                  "Submit Request"
+                )}
               </button>
             </div>
           </div>

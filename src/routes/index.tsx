@@ -23,6 +23,8 @@ import UpdateProject from "../pages/projectoperations/UpdateProject";
 import FAQS from "../pages/FAQS/Faqs";
 import AddFaq from "../pages/FAQS/AddFAQ/AddFaq";
 import UpdateFaq from "../pages/FAQS/updateFaq/updateFaq";
+import Testimonials from "../pages/Testimonial/Testimonial";
+import Blogs from "../pages/Blogs/Blog";
 const RenderRouter: React.FC = () => {
   return (
     <Routes>
@@ -120,18 +122,44 @@ const RenderRouter: React.FC = () => {
             }
           ></Route>
           <Route
-  path="update-faq/:id"
-  element={
-    <RoleBaseRoutes
-      element={
-        <Suspense fallback={<Spin className="app-loading-wrapper" />}>
-          <UpdateFaq />
-        </Suspense>
-      }
-      allowedRoles={["admin"]}
-    />
-  }
- ></Route>
+            path="update-faq/:id"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <UpdateFaq />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+          <Route
+            path="testimonials"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <Testimonials />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+          <Route
+            path="blogs"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <Blogs />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
 
           <Route
             path="cars"

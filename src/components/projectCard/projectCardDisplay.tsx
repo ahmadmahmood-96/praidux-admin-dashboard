@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Dropdown, Menu } from "antd";
 import "./ProjectCard.css";
 
@@ -9,7 +9,6 @@ const ProjectCard = ({
   image,
   checked,
   onToggleCheck,
-  onMoreInfo,
   onDelete,
   onPause,
   onEdit,

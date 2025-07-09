@@ -86,7 +86,7 @@ const Dashboard = () => {
   const {
     data: projects = [],
     isLoading,
-    isError,
+    // isError,
     refetch,
   } = useQuery(["AllProjects"], fetchProjects);
   const filteredProjects = projects.filter((proj: any) => {
@@ -105,38 +105,7 @@ const Dashboard = () => {
   return (
     <>
       {/* <LoadingSpinner isLoading={isLoading} /> */}
-      {/* <div style={{ padding: 24 }}>
-        <Row gutter={16} justify="space-between" align="middle">
-          <Col>
-            <DescriptionTitle
-              title="Analytics Overview"
-              description="Number of unique and total visitors visited hikar website"
-            />
-          </Col>
-          <Col>
-            <RangePicker
-              size="large"
-              value={dateRange}
-              onChange={handleDateChange}
-              allowClear
-            />
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          {statCards.map((card, index) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={card.key}>
-              <StatsCard
-                key={index}
-                title={card.title}
-                value={card.value}
-                icon={card.icon}
-                iconColor={card.iconColor}
-              />
-            </Col>
-          ))}
-        </Row>
-      </div> */}
+      
       <div className="Dashboard-container-Main">
         <div className="Dashboard-container-Main-header">
           <div
