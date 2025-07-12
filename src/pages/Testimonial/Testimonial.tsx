@@ -2,10 +2,11 @@ import { useState } from "react";
 import "./Testimonial.css";
 import VideoTestimonial from "./videoTestimonial/VideoTestimonial";
 import StaticTestimonial from "./staticTestimonial/staticTestimonial";
-
+import { useNavigate } from "react-router-dom";
 const Testimonials = () => {
-  const [selectedCategory, setSelectedCategory] = useState("Video Testimonials");
-
+  const [selectedCategory, setSelectedCategory] =
+    useState("Video Testimonials");
+  const navigate = useNavigate();
   const categoryMap: { [key: string]: string } = {
     "Video Testimonials": "Video Testimonials",
     "Image Testimonials": "Image Testimonials",
@@ -34,10 +35,14 @@ const Testimonials = () => {
             </div>
           </div>
           <div className="header-left-testimonial">
-            <button className="Add-testimonial-button">
+            <button
+              className="Add-testimonial-button"
+              onClick={() => navigate("/add-video-testimonial")}
+            >
               Add Video Testimonial
             </button>
-            <button className="Add-testimonial-button">
+            <button className="Add-testimonial-button"
+             onClick={() => navigate("/add-static-testimonial")}>
               Add Static Testimonial
             </button>
           </div>

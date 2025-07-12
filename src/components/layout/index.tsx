@@ -51,13 +51,24 @@ const AppLayout: React.FC = () => {
   useEffect(() => {
     const path = location.pathname;
     let pathName = path.split("/")[1];
+    // const testimonialRelatedRoutes = [
+    //   "testimonials",
+    //   "add-video-testimonial",
+    //   "edit-video-testimonial",
+    // ];
+    // if (testimonialRelatedRoutes.includes(pathName)) {
+    //   pathName = "testimonials";
+    // }
+    if (["testimonials", "add-video-testimonial" , "add-static-testimonial"].includes(pathName)) {
+      pathName = "testimonials";
+    }
+     if (["blogs", "add-Blog"].includes(pathName)) {
+      pathName = "blogs";
+    }
 
-    // Normalize special sub-routes (like add-Faq/edit-Faq) to match their parent menu key
     if (["add-Faq", "update-faq"].includes(pathName)) {
       pathName = "faqs";
     }
-
-    // Handle blank paths
     if (
       path === "/" ||
       path === "/add-project" ||

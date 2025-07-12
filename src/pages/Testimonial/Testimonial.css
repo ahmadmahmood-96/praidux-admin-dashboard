@@ -92,6 +92,9 @@ border: none;
 .category-button{
   padding: 8px 10px;
 }
+ .testimonial-main-container {
+    padding: 24px !important;
+  }
 }
 @media(max-width:400px){
   .header-left-testimonial{

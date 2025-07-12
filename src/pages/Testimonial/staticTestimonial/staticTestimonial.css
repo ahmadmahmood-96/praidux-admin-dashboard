@@ -1,0 +1,139 @@
+.Static-Testimonial-containers {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.static-test-heading {
+  font-family: Albert Sans;
+  font-weight: 600;
+  font-style: Semibold;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #000000;
+}
+.testimonial-containers-stat {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.Static-Testimonial-card {
+  width: 398px;
+  background: #ffffff;
+  border-radius: 8px;
+  height: fit-content;
+}
+.sttic-card-top-header-selection {
+  padding: 9.5px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.selct-project-test {
+  font-family: Albert Sans;
+  font-weight: 400;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 28.15px;
+  letter-spacing: -0.11px;
+  color: #000000;
+}
+.static-testimonial-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 14px;
+}
+.project-logo-static {
+  font-family: Albert Sans;
+  font-weight: 600;
+  font-style: Semibold;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #000000;
+}
+.project-logo-image-static {
+  height: 239px;
+  width: 370px;
+  /* background: #ff5f1f; */
+  border-radius: 8px;
+}
+.statuc-testimonial-description {
+  font-family: Albert Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  color: #000000;
+}
+.project-static-details-personal {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.image-client {
+  height: 36px;
+  width: 36px;
+  border-radius: 100%;
+  /* background: #ff5f1f; */
+}
+.clientName-designation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: start;
+}
+.static-containers-stat{
+ display: flex;
+ flex-wrap: wrap;
+ gap: 16px;
+}
+.project-client-name-client {
+  font-family: Albert Sans;
+  font-weight: 600;
+  font-style: Semibold;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #000000;
+}
+.project-designation-client {
+  font-family: Albert Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #000000;
+}
+@media (max-width: 550px) {
+  .Static-Testimonial-card {
+    width: 100%;
+  }
+  .project-logo-image-static {
+    width: 100%;
+  }
+  .project-client-name-client {
+    font-size: 14px;
+  }
+  .statuc-testimonial-description {
+    font-size: 14px;
+    line-height: 135%;
+  }
+}
+@media (max-width: 430px) {
+  .project-logo-image-static {
+    height: 180px;
+  }
+  .project-designation-client {
+    font-size: 14px;
+  }
+}

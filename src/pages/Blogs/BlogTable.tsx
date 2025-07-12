@@ -13,42 +13,41 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import client from "../../utils/axios";
 import { ConfirmModal } from "../../components/ui/index.tsx";
 import { useNavigate } from "react-router-dom";
-import "./faq.css"
+import LoadingSpinner from "../../components/ui/LoaderSpinner.tsx";
 
 const fetchFaqs = async () => {
-  const { data } = await client.get("/faq/view-faqs");
+  const { data } = await client.get("/blog/view-blogs");
   return data;
 };
 
 const deleteFaq = async (id: string) => {
-  await client.delete(`/faq/delete-faq/${id}`);
+  await client.delete(`/blog/delete-blog/${id}`);
 };
 
-const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
+const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 
   const { data = [], isLoading, isError } = useQuery("AllFaqs", fetchFaqs);
-
+  const blogs = data?.result || [];
+  console.log("data", blogs);
   const { mutate: deleteFaqById } = useMutation(deleteFaq, {
     onSuccess: () => {
-      message.success("FAQ deleted successfully.");
+      message.success("Blog deleted successfully.");
       queryClient.invalidateQueries("AllFaqs");
     },
     onError: () => {
-      message.error("Failed to delete FAQ.");
+      message.error("Failed to delete Blog.");
     },
   });
 
-  const filteredData = Array.isArray(data)
-    ? data.filter(
-        (item: any) =>
-          item.question?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.answer?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+  const filteredData = blogs.filter(
+    (item: any) =>
+      item.blogTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.writerName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
@@ -82,8 +81,14 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
     ];
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return  <LoadingSpinner
+          isLoading={true}
+        />;
   if (isError) return <p>Something went wrong while loading FAQs</p>;
+  const stripHtml = (html: string) =>
+    html.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ");
+
+  //   const preview = stripHtml(blog.blogContent).slice(0, 100) + "...";
 
   return (
     <div
@@ -115,8 +120,9 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
         >
           <TableHead>
             <TableRow sx={{ background: "#F9FAFB" }}>
-              <TableCell sx={headerCellStyle}>Question</TableCell>
-              <TableCell sx={headerCellStyle}>Answer</TableCell>
+              <TableCell sx={headerCellStyle}>Title</TableCell>
+              <TableCell sx={headerCellStyle}>Writer Name</TableCell>
+              <TableCell sx={headerCellStyle}>Description</TableCell>
               <TableCell sx={headerCellStyle}>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -130,15 +136,25 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
                   },
                 }}
               >
-                <TableCell sx={rowCellStyle}>{item.question}</TableCell>
-                <TableCell sx={rowCellStyle}>{item.answer}</TableCell>
+                <TableCell sx={rowCellStyle} style={{ whiteSpace: "nowrap" }}>
+                  {item.blogTitle}
+                </TableCell>
+                <TableCell sx={rowCellStyle} style={{ whiteSpace: "nowrap" }}>
+                  {item.writerName}
+                </TableCell>
+                <TableCell sx={rowCellStyle}>
+                  {" "}
+                  <span title={stripHtml(item.blogContent)}>
+                    {stripHtml(item.blogContent).slice(0, 100)}...
+                  </span>
+                </TableCell>
                 <TableCell sx={rowCellStyle}>
                   <Dropdown
                     trigger={["click"]}
                     overlay={
                       <Menu>
                         <Menu.Item
-                          onClick={() => navigate(`/update-faq/${item._id}`)}
+                          onClick={() => navigate(`/add-Blog/${item._id}`)}
                         >
                           Edit
                         </Menu.Item>
@@ -146,9 +162,9 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
                           onClick={() =>
                             ConfirmModal({
                               className: "delete-modal",
-                              title: "Delete FAQ",
+                              title: "Delete Blog",
                               content:
-                                "Are you sure you want to delete this FAQ?",
+                                "Are you sure you want to delete this Blog?",
                               okText: "Delete",
                               cancelText: "Cancel",
                               onOk: () => deleteFaqById(item._id),
@@ -199,7 +215,7 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
             alignItems: "center",
           }}
         >
-          <img className="arrowRight" src="/Images/arrow-left.svg" alt="left" />
+          <img src="/Images/arrow-left.svg" alt="left" />
           Previous
         </button>
 
@@ -247,7 +263,7 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
           onClick={() => setCurrentPage((prev) => prev + 1)}
         >
           Next
-          <img className="arrowRight" src="/Images/arrow-right.svg" alt="left" />
+          <img src="/Images/arrow-right.svg" alt="left" />
         </button>
       </Box>
     </div>
@@ -267,11 +283,10 @@ const headerCellStyle = {
 
 const rowCellStyle = {
   fontFamily: "Albert Sans",
-  VscWhitespace:"nowrap",
   fontWeight: "400",
   fontSize: "14px",
   lineHeight: "20px",
   color: "#101828",
 };
 
-export default FaqTable;
+export default BlogTable;

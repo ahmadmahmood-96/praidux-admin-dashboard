@@ -25,6 +25,9 @@ import AddFaq from "../pages/FAQS/AddFAQ/AddFaq";
 import UpdateFaq from "../pages/FAQS/updateFaq/updateFaq";
 import Testimonials from "../pages/Testimonial/Testimonial";
 import Blogs from "../pages/Blogs/Blog";
+import AddVideoTestimonial from "../pages/Testimonial/videoTestimonial/AddVideoTest/AddVideoTestimonial";
+import AddStaticTestimonial from "../pages/Testimonial/staticTestimonial/AddStaticTestimonial/AddStaticTestimonial";
+import AddBlog from "../pages/Blogs/AddBlog/AddBlog";
 const RenderRouter: React.FC = () => {
   return (
     <Routes>
@@ -147,6 +150,57 @@ const RenderRouter: React.FC = () => {
               />
             }
           ></Route>
+          <Route
+            path="add-video-testimonial"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <AddVideoTestimonial />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+          <Route
+            path="/add-static-testimonial"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <AddStaticTestimonial />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+          <Route
+            path="/add-static-testimonial/:id"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <AddStaticTestimonial />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+          <Route
+            path="/add-video-testimonial/:id"
+            element={<AddVideoTestimonial />}
+          />
+           <Route
+            path="/add-Blog/:id"
+            element={<AddBlog />}
+          />
+           <Route
+            path="/add-Blog"
+            element={<AddBlog />}
+          />
           <Route
             path="blogs"
             element={
