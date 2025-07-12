@@ -24,25 +24,25 @@ const UpdateProject = () => {
     }
   );
   const updateProjectMutation = useMutation(
-  async (formData: FormData) => {
-    return await client.put(`/project/update-project/${id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
+    async (formData: FormData) => {
+      return await client.put(`/project/update-project/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    },
+    {
+      onSuccess: () => {
+        message.success("Project updated successfully!");
+        queryClient.invalidateQueries(["ProjectById", id]); // optional: refresh data
+        navigate("/projects");
       },
-    });
-  },
-  {
-    onSuccess: () => {
-      message.success("Project updated successfully!");
-      queryClient.invalidateQueries(["ProjectById", id]); // optional: refresh data
-      navigate("/projects");
-    },
-    onError: (error) => {
-      console.error("Update error:", error);
-      message.error("Failed to update project.");
-    },
-  }
-);
+      onError: (error) => {
+        console.error("Update error:", error);
+        message.error("Failed to update project.");
+      },
+    }
+  );
 
   // After your useQuery()
   const [mainCategory, setMainCategory] = useState("Mobile App");
@@ -146,7 +146,7 @@ const UpdateProject = () => {
         alignItems: "center",
         cursor: "pointer",
       }}
-     onClick={() => {
+      onClick={() => {
         console.log(`Selected category from ${group}:`, value);
         setSelected(value);
       }}
@@ -192,6 +192,55 @@ const UpdateProject = () => {
       setVideoFile(null);
     }
   };
+  const validateFormSequentially = () => {
+    if (!projectclient.trim()) {
+      message.warning("Please enter the Client name");
+      return false;
+    }
+
+    if (!title.trim()) {
+      message.warning("Please enter the Title");
+      return false;
+    }
+
+    if (!duration.trim()) {
+      message.warning("Please enter the Duration");
+      return false;
+    }
+
+    if (!downloads.trim()) {
+      message.warning("Please enter Downloads / Visitors");
+      return false;
+    }
+
+    if (!description.trim()) {
+      message.warning("Please enter the Description");
+      return false;
+    }
+
+    if (!logoFile) {
+      message.warning("Please upload a Project Logo");
+      return false;
+    }
+
+    if (imageFiles.length === 0) {
+      message.warning("Please upload at least one Project Image");
+      return false;
+    }
+    if (
+      !selectedDesign &&
+      !selectedDevelopment &&
+      !selectedAI &&
+      !selectedPlatform
+    ) {
+      message.warning(
+        "Please select at least one category (Design, Development, AI, or Platform)"
+      );
+      return false;
+    }
+
+    return true;
+  };
 
   const handleImagesChange = ({ fileList }: UploadChangeParam<any>) => {
     const activeFiles = fileList.filter((file) => file.status !== "removed");
@@ -207,22 +256,24 @@ const UpdateProject = () => {
     setImageFiles([...existingFiles, ...newUploads]);
   };
 
- const handleRemoveImage = (fileToRemove: any) => {
-  if (fileToRemove.url && !fileToRemove.originFileObj) {
-    // Existing image - mark for removal from backend
-    setRemovedImages(prev => [...prev, fileToRemove.url]);
-  }
-  
-  // Remove from UI immediately
-  setImageFiles(prev => prev.filter(file => 
-    file.uid !== fileToRemove.uid
-  ));
+  const handleRemoveImage = (fileToRemove: any) => {
+    if (fileToRemove.url && !fileToRemove.originFileObj) {
+      // Existing image - mark for removal from backend
+      setRemovedImages((prev) => [...prev, fileToRemove.url]);
+    }
 
-  // Mark that images have changed
-  setImagesChanged(true);
-};
+    // Remove from UI immediately
+    setImageFiles((prev) =>
+      prev.filter((file) => file.uid !== fileToRemove.uid)
+    );
+
+    // Mark that images have changed
+    setImagesChanged(true);
+  };
 
   const submitProject = async () => {
+    const isValid = validateFormSequentially();
+    if (!isValid) return;
     const formData = new FormData();
 
     // ✅ Text fields
@@ -283,14 +334,16 @@ const UpdateProject = () => {
 
     // ✅ Removed image URLs
     removedImages.forEach((url) => {
-      formData.append("removedImages[]", url); 
+      formData.append("removedImages[]", url);
     });
 
- updateProjectMutation.mutate(formData);  
+    updateProjectMutation.mutate(formData);
   };
   return (
     <>
-    <LoadingSpinner isLoading={isLoading || updateProjectMutation.isLoading} />
+      <LoadingSpinner
+        isLoading={isLoading || updateProjectMutation.isLoading}
+      />
       <div className="Add-Project-Container">
         <p className="Project-add-heading">Projects</p>
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -432,10 +485,24 @@ const UpdateProject = () => {
                   }}
                 >
                   <Upload
+                    beforeUpload={(file) => {
+                      const isAllowedType = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif",
+                        "image/webp",
+                      ].includes(file.type);
+                      if (!isAllowedType) {
+                        message.error(
+                          "Only JPG, PNG, GIF, and WEBP images are allowed"
+                        );
+                        return Upload.LIST_IGNORE; // Prevent file from being added
+                      }
+                      return false; // Prevent auto-upload
+                    }}
                     showUploadList={false}
                     onChange={handleLogoChange}
                     fileList={logoFile ? [logoFile] : []}
-                    beforeUpload={() => false}
                     onRemove={handleRemoveImage}
                   >
                     <button className="Upload-button-reuable">
@@ -485,6 +552,7 @@ const UpdateProject = () => {
                   }}
                 >
                   <Upload
+                    accept="video/*"
                     showUploadList={false}
                     onChange={handleVideoChange}
                     fileList={videoFile ? [videoFile] : []}
@@ -532,8 +600,21 @@ const UpdateProject = () => {
                   multiple
                   onChange={handleImagesChange}
                   fileList={imageFiles}
-                  beforeUpload={() => false} // prevents auto-upload
-                  showUploadList={false}
+                  beforeUpload={(file) => {
+                    const isAllowedType = [
+                      "image/jpeg",
+                      "image/png",
+                      "image/gif",
+                      "image/webp",
+                    ].includes(file.type);
+                    if (!isAllowedType) {
+                      message.error(
+                        "Only JPG, PNG, GIF, and WEBP images are allowed"
+                      );
+                      return Upload.LIST_IGNORE; // Prevent file from being added
+                    }
+                    return false; // Prevent auto-upload
+                  }}
                 >
                   <div
                     className="Upload-button-reuable"
@@ -598,7 +679,7 @@ const UpdateProject = () => {
                             }}
                           />
                           <span
-                             onClick={() => handleRemoveImage(file)}
+                            onClick={() => handleRemoveImage(file)}
                             style={{
                               position: "absolute",
                               top: "4px",

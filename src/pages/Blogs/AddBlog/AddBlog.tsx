@@ -36,6 +36,35 @@ const AddBlog = () => {
   ];
 
   const handleSubmit = async () => {
+    if (!writerName.trim()) {
+      message.warning("Please enter the writer's name");
+      return;
+    }
+
+    if (!blogTitle.trim()) {
+      message.warning("Please enter the blog title");
+      return;
+    }
+
+    if (categories.length === 0) {
+      message.warning("Please select at least one category");
+      return;
+    }
+
+    if (
+      !blogContent ||
+      blogContent.trim() === "" ||
+      blogContent === "<p><br></p>"
+    ) {
+      message.warning("Please enter the blog content");
+      return;
+    }
+
+    if (!blogImageFile && !blogImageUrl) {
+      message.warning("Please upload a blog image");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -60,10 +89,9 @@ const AddBlog = () => {
         err?.response?.data?.message ||
         "Something went wrong while submitting the blog";
       message.error(msg);
+    } finally {
+      setIsSubmitting(false); // Stop loader
     }
-    finally {
-    setIsSubmitting(false); // Stop loader
-  }
   };
 
   const handleImageChange = (info: UploadChangeParam<UploadFile<any>>) => {
@@ -92,220 +120,237 @@ const AddBlog = () => {
 
   return (
     <>
-    {isSubmitting && <LoadingSpinner isLoading={true} />}
+      {isSubmitting && <LoadingSpinner isLoading={true} />}
 
-    <div className="Add-video-testimonial">
-      <p className="Project-add-heading">Blog</p>
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-        <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-          <button className="BackNavigation" onClick={() => navigate(-1)}>
-            <img src="/Images/Project/back.svg" alt="Back" />
-            Back
-          </button>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <p className="ProjectNavigationhead">Blog</p>
-            <p className="ProjectNavigationhead">|</p>
-            <p className="ProjectNavigationheaddetails">Details</p>
-          </div>
-        </div>
-
-        <div className="add-video-form">
-          {/* Row 1 */}
-          <div className="add-video-top-line">
-            <div className="add-video-test-container">
-              <p className="client-name-paraa">Writer Name</p>
-              <input
-                className="client-naMe-Input"
-                value={writerName}
-                onChange={(e) => setWriterName(e.target.value)}
-              />
-            </div>
-            <div className="add-video-test-container">
-              <p className="client-name-paraa">Blog Title</p>
-              <input
-                className="client-naMe-Input"
-                value={blogTitle}
-                onChange={(e) => setBlogTitle(e.target.value)}
-              />
+      <div className="Add-video-testimonial">
+        <p className="Project-add-heading">Blog</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+            <button className="BackNavigation" onClick={() => navigate(-1)}>
+              <img src="/Images/Project/back.svg" alt="Back" />
+              Back
+            </button>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <p className="ProjectNavigationhead">Blog</p>
+              <p className="ProjectNavigationhead">|</p>
+              <p className="ProjectNavigationheaddetails">Details</p>
             </div>
           </div>
 
-          {/* Row 2 */}
-          <div className="add-video-top-line">
-            <div className="add-video-test-container">
-              <p className="client-name-paraa">Blog Categories</p>
-              <FormControl fullWidth>
-                <Select
-                  multiple
-                  displayEmpty
-                  value={categories}
-                  onChange={(e) => setCategories(e.target.value as string[])}
-                  renderValue={(selected) =>
-                    selected.length === 0 ? (
-                      <span
-                        style={{ fontFamily: "Albert Sans", color: "#9AA1B2" }}
-                      >
-                        Select Categories
-                      </span>
-                    ) : (
-                      <span
-                        style={{
-                          fontFamily: "Albert Sans",
-                          fontSize: "14px",
-                          color: "#000",
-                          lineHeight: "125%",
-                        }}
-                      >
-                        {selected.join(", ")}
-                      </span>
-                    )
-                  }
-                  sx={{
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      border: "none",
-                    },
-                    backgroundColor: "#fff",
-                    height: "48px",
-                    borderRadius: "8px",
-                    border: "1px solid #D0D5DD",
-                  }}
-                >
-                  {categoryOptions.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                      sx={{
-                        backgroundColor: "transparent",
-                        "&.Mui-selected": {
-                          backgroundColor: "transparent",
-                        },
-                        "&.Mui-selected:hover": {
-                          backgroundColor: "transparent",
-                        },
-                        "&:hover": {
-                          backgroundColor: "transparent",
-                        },
-                      }}
-                    >
-                      <Checkbox
-                        checked={categories.indexOf(name) > -1}
-                        sx={{
-                          color: "#49454F",
-                          "&.Mui-checked": {
-                            color: "#FF5F1F",
-                          },
-                        }}
-                      />
-                      <ListItemText
-                        primary={name}
-                        primaryTypographyProps={{
-                          sx: {
-                            fontFamily: "Albert Sans",
-                            fontSize: "14px",
-                            lineHeight: "125%",
-                          },
-                        }}
-                      />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-
-            <div className="add-video-test-container">
-              <p className="add-form-title">Blog Image</p>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                  flexWrap: "wrap",
-                }}
-              >
-                <Upload
-                  showUploadList={false}
-                  onChange={handleImageChange}
-                  fileList={blogImageFile ? [blogImageFile] : []}
-                  beforeUpload={() => false}
-                >
-                  {!blogImageFile && blogImageUrl && (
-                    <img
-                      src={blogImageUrl}
-                      alt="Blog"
-                      width="100%"
-                      style={{
-                        maxWidth: "300px",
-                        borderRadius: "8px",
-                        backgroundColor: "#f2f2f2",
-                      }}
-                    />
-                  )}
-
-                  <button className="Upload-button-reuable">
-                    <img
-                      style={{ width: "24px", height: "24px" }}
-                      src="/Images/Project/Cloud-Upload.svg"
-                      alt="upload"
-                    />
-                    Upload
-                  </button>
-                </Upload>
-
-                {blogImageFile && (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    <p className="selectedFileName">{blogImageFile.name}</p>
-                    <span
-                      style={{
-                        cursor: "pointer",
-                        color: "#344054",
-                        fontWeight: "bold",
-                        fontSize: "16px",
-                      }}
-                      onClick={() => setBlogImageFile(null)}
-                    >
-                      ×
-                    </span>
-                  </div>
-                )}
+          <div className="add-video-form">
+            {/* Row 1 */}
+            <div className="add-video-top-line">
+              <div className="add-video-test-container">
+                <p className="client-name-paraa">Writer Name</p>
+                <input
+                  className="client-naMe-Input"
+                  value={writerName}
+                  onChange={(e) => setWriterName(e.target.value)}
+                />
+              </div>
+              <div className="add-video-test-container">
+                <p className="client-name-paraa">Blog Title</p>
+                <input
+                  className="client-naMe-Input"
+                  value={blogTitle}
+                  onChange={(e) => setBlogTitle(e.target.value)}
+                />
               </div>
             </div>
-          </div>
-          {/* Blog Content */}
-          <div className="add-video-test-container">
-            <p className="client-name-paraa">Blog Content</p>
-            <QuillTextEditor
-              value={blogContent}
-              onChange={(value) => setBlogContent(value)}
-              height={300}
-            />
-          </div>
-          {/* List on Website */}
-          <div
-            className="add-video-test-container"
-            style={{ display: "flex", gap: "12px", flexDirection: "column" }}
-          >
-            <p className="add-form-title" style={{ marginBottom: 0 }}>
-              List on Website
-            </p>
-            <Switch
-              style={{ width: "50px" }}
-              checked={shouldList}
-              onChange={(checked) => setShouldList(checked)}
-            />
-          </div>
 
-          <button className="video-testimonial-button" onClick={handleSubmit}>
-            Submit Request
-          </button>
+            {/* Row 2 */}
+            <div className="add-video-top-line">
+              <div className="add-video-test-container">
+                <p className="client-name-paraa">Blog Categories</p>
+                <FormControl fullWidth>
+                  <Select
+                    multiple
+                    displayEmpty
+                    value={categories}
+                    onChange={(e) => setCategories(e.target.value as string[])}
+                    renderValue={(selected) =>
+                      selected.length === 0 ? (
+                        <span
+                          style={{
+                            fontFamily: "Albert Sans",
+                            color: "#9AA1B2",
+                          }}
+                        >
+                          Select Categories
+                        </span>
+                      ) : (
+                        <span
+                          style={{
+                            fontFamily: "Albert Sans",
+                            fontSize: "14px",
+                            color: "#000",
+                            lineHeight: "125%",
+                          }}
+                        >
+                          {selected.join(", ")}
+                        </span>
+                      )
+                    }
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                      backgroundColor: "#fff",
+                      height: "48px",
+                      borderRadius: "8px",
+                      border: "1px solid #D0D5DD",
+                    }}
+                  >
+                    {categoryOptions.map((name) => (
+                      <MenuItem
+                        key={name}
+                        value={name}
+                        sx={{
+                          backgroundColor: "transparent",
+                          "&.Mui-selected": {
+                            backgroundColor: "transparent",
+                          },
+                          "&.Mui-selected:hover": {
+                            backgroundColor: "transparent",
+                          },
+                          "&:hover": {
+                            backgroundColor: "transparent",
+                          },
+                        }}
+                      >
+                        <Checkbox
+                          checked={categories.indexOf(name) > -1}
+                          sx={{
+                            color: "#49454F",
+                            "&.Mui-checked": {
+                              color: "#FF5F1F",
+                            },
+                          }}
+                        />
+                        <ListItemText
+                          primary={name}
+                          primaryTypographyProps={{
+                            sx: {
+                              fontFamily: "Albert Sans",
+                              fontSize: "14px",
+                              lineHeight: "125%",
+                            },
+                          }}
+                        />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+
+              <div className="add-video-test-container">
+                <p className="add-form-title">Blog Image</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Upload
+                    showUploadList={false}
+                    onChange={handleImageChange}
+                    fileList={blogImageFile ? [blogImageFile] : []}
+                    beforeUpload={(file) => {
+                      const isAllowedType = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif",
+                        "image/webp",
+                      ].includes(file.type);
+                      if (!isAllowedType) {
+                        message.error(
+                          "Only JPG, PNG, GIF, and WEBP images are allowed"
+                        );
+                        return Upload.LIST_IGNORE; // Prevent file from being added
+                      }
+                      return false; // Prevent auto-upload
+                    }}
+                  >
+                    {!blogImageFile && blogImageUrl && (
+                      <img
+                        src={blogImageUrl}
+                        alt="Blog"
+                        width="100%"
+                        style={{
+                          maxWidth: "300px",
+                          borderRadius: "8px",
+                          backgroundColor: "#f2f2f2",
+                        }}
+                      />
+                    )}
+
+                    <button className="Upload-button-reuable">
+                      <img
+                        style={{ width: "24px", height: "24px" }}
+                        src="/Images/Project/Cloud-Upload.svg"
+                        alt="upload"
+                      />
+                      Upload
+                    </button>
+                  </Upload>
+
+                  {blogImageFile && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <p className="selectedFileName">{blogImageFile.name}</p>
+                      <span
+                        style={{
+                          cursor: "pointer",
+                          color: "#344054",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                        onClick={() => setBlogImageFile(null)}
+                      >
+                        ×
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* Blog Content */}
+            <div className="add-video-test-container">
+              <p className="client-name-paraa">Blog Content</p>
+              <QuillTextEditor
+                value={blogContent}
+                onChange={(value) => setBlogContent(value)}
+                height={300}
+              />
+            </div>
+            {/* List on Website */}
+            <div
+              className="add-video-test-container"
+              style={{ display: "flex", gap: "12px", flexDirection: "column" }}
+            >
+              <p className="add-form-title" style={{ marginBottom: 0 }}>
+                List on Website
+              </p>
+              <Switch
+                style={{ width: "50px" }}
+                checked={shouldList}
+                onChange={(checked) => setShouldList(checked)}
+              />
+            </div>
+
+            <button className="video-testimonial-button" onClick={handleSubmit}>
+              Submit Request
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 };

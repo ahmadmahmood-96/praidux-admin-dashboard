@@ -101,7 +101,17 @@ const UpdateFaq = () => {
           </div>
           <button
             className="Add-faq-button"
-            onClick={() => updateFaq()}
+            onClick={() => {
+              if (!question.trim()) {
+                message.warning("Please enter a question");
+                return;
+              }
+              if (!answer.trim()) {
+                message.warning("Please enter an answer");
+                return;
+              }
+              updateFaq();
+            }}
             disabled={isSubmitting}
           >
             {isSubmitting ? (

@@ -28,6 +28,27 @@ const AddVideoTestimonial = () => {
   const [videoUrl, setVideoUrl] = useState("");
 
   const handleSubmit = async () => {
+    if (!clientName.trim()) {
+      return message.warning("Client name is required.");
+    }
+    if (!designation.trim()) {
+      return message.warning("Designation is required.");
+    }
+    if (!projectName.trim()) {
+      return message.warning("Project name is required.");
+    }
+    if (!description.trim()) {
+      return message.warning("Description is required.");
+    }
+    if (!liveStatus) {
+      return message.warning("Please select a Live Status.");
+    }
+    if (!starsGiven || Number(starsGiven) < 1 || Number(starsGiven) > 5) {
+      return message.warning("Please provide stars between 1 and 5.");
+    }
+    if (!logoFile && !videoUrl) {
+      return message.warning("Please upload a video.");
+    }
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -95,7 +116,7 @@ const AddVideoTestimonial = () => {
   }, [id]);
   return (
     <>
-     {isSubmitting && <LoadingSpinner isLoading={true} />}
+      {isSubmitting && <LoadingSpinner isLoading={true} />}
       <div className="Add-video-testimonial">
         <p className="Project-add-heading">Video Testimonial</p>
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -242,6 +263,7 @@ const AddVideoTestimonial = () => {
                   }}
                 >
                   <Upload
+                   accept="video/*"
                     showUploadList={false}
                     onChange={handleLogoChange}
                     fileList={logoFile ? [logoFile] : []}

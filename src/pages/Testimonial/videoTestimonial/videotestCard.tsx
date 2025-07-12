@@ -1,6 +1,6 @@
 import "./videoTestimonial.css";
 import { Dropdown, Menu } from "antd";
-
+import { useState } from "react";
 interface VideoTestCardProps {
   testimonial: {
     clientName: string;
@@ -13,6 +13,7 @@ interface VideoTestCardProps {
     androidLink?: string;
     liveStatus: string;
     videoUrl?: string;
+    thumbnailUrl?: string;
     _id: string;
   };
   checked: boolean;
@@ -27,18 +28,24 @@ const VideoTestCard = ({
   onToggleCheck,
   onAction
 }: VideoTestCardProps) => {
+   const [showVideo, setShowVideo] = useState(false);
   const {
     clientName,
     // designation,
     projectName,
     stars,
     description,
+     thumbnailUrl, 
     // websiteLink,
     // iosLink,
     // androidLink,
     liveStatus,
     videoUrl,
   } = testimonial;
+   const handlePlayClick = () => {
+    setShowVideo(true);
+  };
+
 const menu = (
   <Menu>
     <Menu.Item key="edit" onClick={() => onAction(testimonial._id, "edit")}>
@@ -72,8 +79,40 @@ const menu = (
 
       <div className="video-test-bottom-part-card">
         <div className="video-section">
+         
           {videoUrl && (
-            <video src={videoUrl} controls width="100%" height="100%" />
+            <>
+              {/* Thumbnail with play button (shown by default) */}
+              {!showVideo && (
+                <div 
+                  className="video-thumbnail-container"
+                  onClick={handlePlayClick}
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    cursor: 'pointer',
+                    background: thumbnailUrl ? `url(${thumbnailUrl}) center/cover` : '#ff5f1f'
+                  }}
+                >
+                  <div className="video-play-button"  style={{width:"64px"}}>
+                    <img src="/Images/play.svg" alt="play"/>
+                  
+                  </div>
+                </div>
+              )}
+              
+              {/* Video element (shown after click) */}
+              {showVideo && (
+                <video 
+                  src={videoUrl} 
+                  controls 
+                  width="100%" 
+                  height="100%"
+                  autoPlay
+                />
+              )}
+            </>
           )}
         </div>
         <div className="video-card-second">

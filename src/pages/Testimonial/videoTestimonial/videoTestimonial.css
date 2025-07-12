@@ -13,6 +13,38 @@
   letter-spacing: 0%;
   color: #000000;
 }
+.video-thumbnail-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.video-play-button {
+  position: absolute;
+  top: 70%;
+  right: 85%;
+
+  /* width: 60px;
+  height: 60px; */
+ 
+}
+
+
+
+.video-play-button img {
+  /* width: 24px;
+  height: 24px; */
+}
+
+/* Ensure video element fills its container */
+.video-section video {
+  width: 100%;
+  height: 100%;
+  object-fit:cover ;
+  border-radius: 12px;
+}
 .video-testimonila-bottoms {
   display: flex;
   flex-direction: column;

@@ -89,6 +89,55 @@ const AddProject = () => {
       },
     }
   );
+  const validateFormSequentially = () => {
+    if (!projectclient.trim()) {
+      message.warning("Please enter the Client name");
+      return false;
+    }
+
+    if (!title.trim()) {
+      message.warning("Please enter the Title");
+      return false;
+    }
+
+    if (!duration.trim()) {
+      message.warning("Please enter the Duration");
+      return false;
+    }
+
+    if (!downloads.trim()) {
+      message.warning("Please enter Downloads / Visitors");
+      return false;
+    }
+
+    if (!description.trim()) {
+      message.warning("Please enter the Description");
+      return false;
+    }
+
+    if (!logoFile) {
+      message.warning("Please upload a Project Logo");
+      return false;
+    }
+
+    if (imageFiles.length === 0) {
+      message.warning("Please upload at least one Project Image");
+      return false;
+    }
+    if (
+      !selectedDesign &&
+      !selectedDevelopment &&
+      !selectedAI &&
+      !selectedPlatform
+    ) {
+      message.warning(
+        "Please select at least one category (Design, Development, AI, or Platform)"
+      );
+      return false;
+    }
+
+    return true;
+  };
 
   const renderOption = (
     group: string,
@@ -288,7 +337,21 @@ const AddProject = () => {
                     showUploadList={false}
                     onChange={handleLogoChange}
                     fileList={logoFile ? [logoFile] : []}
-                    beforeUpload={() => false}
+                    beforeUpload={(file) => {
+                      const isAllowedType = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif",
+                        "image/webp",
+                      ].includes(file.type);
+                      if (!isAllowedType) {
+                        message.error(
+                          "Only JPG, PNG, GIF, and WEBP images are allowed"
+                        );
+                        return Upload.LIST_IGNORE; // Prevent file from being added
+                      }
+                      return false; // Prevent auto-upload
+                    }}
                   >
                     <button className="Upload-button-reuable">
                       <img
@@ -338,6 +401,7 @@ const AddProject = () => {
                 >
                   <Upload
                     showUploadList={false}
+                      accept="video/*"
                     onChange={handleVideoChange}
                     fileList={videoFile ? [videoFile] : []}
                     beforeUpload={() => false}
@@ -385,8 +449,21 @@ const AddProject = () => {
                   //   listType="picture-card"
                   onChange={handleImagesChange}
                   fileList={imageFiles}
-                  beforeUpload={() => false}
-                  showUploadList={false} // we'll show custom list
+                  beforeUpload={(file) => {
+                    const isAllowedType = [
+                      "image/jpeg",
+                      "image/png",
+                      "image/gif",
+                      "image/webp",
+                    ].includes(file.type);
+                    if (!isAllowedType) {
+                      message.error(
+                        "Only JPG, PNG, GIF, and WEBP images are allowed"
+                      );
+                      return Upload.LIST_IGNORE; // Prevent file from being added
+                    }
+                    return false; // Prevent auto-upload
+                  }}
                 >
                   <div
                     className="Upload-button-reuable"
@@ -496,7 +573,12 @@ const AddProject = () => {
             <div style={{ textAlign: "right", marginTop: 24 }}>
               <button
                 className="ButonSubmit"
-                onClick={() => submitProject()}
+                onClick={() => {
+                  const isValid = validateFormSequentially();
+                  if (isValid) {
+                    submitProject();
+                  }
+                }}
                 disabled={isLoading}
               >
                 {isLoading ? (

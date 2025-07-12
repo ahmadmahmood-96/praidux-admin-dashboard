@@ -66,6 +66,22 @@ const AddStaticTestimonial = () => {
     }
   }, [id]);
   const handleSubmit = async () => {
+    if (!clientName.trim()) {
+      message.warning("Please enter Client Name");
+      return;
+    }
+    if (!designation.trim()) {
+      message.warning("Please enter Designation");
+      return;
+    }
+    if (!projectName.trim()) {
+      message.warning("Please enter Project Name");
+      return;
+    }
+    if (!description.trim()) {
+      message.warning("Please enter Description");
+      return;
+    }
     setIsSubmitting(true);
     const formData = new FormData();
     formData.append("clientName", clientName);
@@ -110,132 +126,162 @@ const AddStaticTestimonial = () => {
 
   return (
     <>
-     {isSubmitting && <LoadingSpinner isLoading={true} />}
-    <div className="Add-video-testimonial">
-      <p className="Project-add-heading">Testimonial</p>
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-        {/* Back navigation */}
-        <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-          <button className="BackNavigation" onClick={() => navigate(-1)}>
-            <img src="/Images/Project/back.svg" alt="Back" />
-            Back
-          </button>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <p className="ProjectNavigationhead">Testimonials</p>
-            <p className="ProjectNavigationhead">|</p>
-            <p className="ProjectNavigationheaddetails">Add</p>
-          </div>
-        </div>
-
-        <div className="add-video-form">
-          {/* Client Name and Designation */}
-          <div className="add-video-top-line">
-            <div className="add-video-test-container">
-              <p className="client-name-paraa">Client Name</p>
-              <input
-                className="client-naMe-Input"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-              />
-            </div>
-            <div className="add-video-test-container">
-              <p className="client-name-paraa">Designation</p>
-              <input
-                className="client-naMe-Input"
-                value={designation}
-                onChange={(e) => setDesignation(e.target.value)}
-              />
+      {isSubmitting && <LoadingSpinner isLoading={true} />}
+      <div className="Add-video-testimonial">
+        <p className="Project-add-heading">Testimonial</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          {/* Back navigation */}
+          <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+            <button className="BackNavigation" onClick={() => navigate(-1)}>
+              <img src="/Images/Project/back.svg" alt="Back" />
+              Back
+            </button>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <p className="ProjectNavigationhead">Testimonials</p>
+              <p className="ProjectNavigationhead">|</p>
+              <p className="ProjectNavigationheaddetails">Add</p>
             </div>
           </div>
-          <div className="add-video-top-line">
+
+          <div className="add-video-form">
+            {/* Client Name and Designation */}
+            <div className="add-video-top-line">
+              <div className="add-video-test-container">
+                <p className="client-name-paraa">Client Name</p>
+                <input
+                  className="client-naMe-Input"
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
+                />
+              </div>
+              <div className="add-video-test-container">
+                <p className="client-name-paraa">Designation</p>
+                <input
+                  className="client-naMe-Input"
+                  value={designation}
+                  onChange={(e) => setDesignation(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="add-video-top-line">
+              <div className="add-video-test-container">
+                <p className="client-name-paraa">Project Name</p>
+                <input
+                  className="client-naMe-Input"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                />
+              </div>
+              <div className="add-video-test-container"></div>
+            </div>
+
+            {/* Description */}
             <div className="add-video-test-container">
-              <p className="client-name-paraa">Project Name</p>
-              <input
-                className="client-naMe-Input"
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
+              <p className="client-name-paraa">Description</p>
+              <textarea
+                className="client-naMe-Input-description fixed-textarea"
+                placeholder="Tell us a little about the project..."
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-            <div className="add-video-test-container"></div>
-          </div>
 
-          {/* Description */}
-          <div className="add-video-test-container">
-            <p className="client-name-paraa">Description</p>
-            <textarea
-              className="client-naMe-Input-description fixed-textarea"
-              placeholder="Tell us a little about the project..."
-              rows={4}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-
-          {/* Upload Section */}
-          <div className="add-video-top-line">
-            {/* Project Logo */}
-            <div className="add-video-test-container">
-              <p className="add-form-title">Project Logo</p>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                  flexWrap: "wrap",
-                }}
-              >
-                <Upload
-                  showUploadList={false}
-                  onChange={handleLogoChange}
-                  fileList={logoFile ? [logoFile] : []}
-                  beforeUpload={() => false}
+            {/* Upload Section */}
+            <div className="add-video-top-line">
+              {/* Project Logo */}
+              <div className="add-video-test-container">
+                <p className="add-form-title">Project Logo</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                    flexWrap: "wrap",
+                  }}
                 >
-                  <button className="Upload-button-reuable">
-                    <img
-                      style={{ width: "24px", height: "24px" }}
-                      src="/Images/Project/Cloud-Upload.svg"
-                      alt="upload"
-                    />
-                    Upload
-                  </button>
-                  {logoFile && (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}
-                    >
-                      <p className="selectedFileName">{logoFile.name}</p>
-                      <span
+                  <Upload
+                    showUploadList={false}
+                    onChange={handleLogoChange}
+                    fileList={logoFile ? [logoFile] : []}
+                    beforeUpload={(file) => {
+                      const isAllowedType = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif",
+                        "image/webp",
+                      ].includes(file.type);
+                      if (!isAllowedType) {
+                        message.error(
+                          "Only JPG, PNG, GIF, and WEBP images are allowed"
+                        );
+                        return Upload.LIST_IGNORE; // Prevent file from being added
+                      }
+                      return false; // Prevent auto-upload
+                    }}
+                  >
+                      {!clientImageFile && logoPreviewUrl && (
+                      <img
+                        src={
+                          logoFile?.originFileObj
+                            ? URL.createObjectURL(logoFile.originFileObj)
+                            : logoPreviewUrl
+                        }
+                        alt="Preview"
                         style={{
-                          cursor: "pointer",
-                          color: "#344054",
-                          fontWeight: "bold",
-                          fontSize: "16px",
+                          width: "100px",
+                          height: "100px",
+                          objectFit: "cover",
+                          borderRadius: "8px",
                         }}
-                        onClick={() => setLogoFile(null)}
+                      />
+                    )}
+                    <button className="Upload-button-reuable">
+                      <img
+                        style={{ width: "24px", height: "24px" }}
+                        src="/Images/Project/Cloud-Upload.svg"
+                        alt="upload"
+                      />
+                      Upload
+                    </button>
+                    {logoFile && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
                       >
-                        ×
-                      </span>
-                      {/* ✅ Preview */}
-                      {logoFile.originFileObj && (
-                        <img
-                          src={URL.createObjectURL(logoFile.originFileObj)}
-                          alt="Preview"
+                        <p className="selectedFileName">{logoFile.name}</p>
+                        <span
                           style={{
-                            width: "100px",
-                            height: "100px",
-                            objectFit: "cover",
-                            borderRadius: "8px",
+                            cursor: "pointer",
+                            color: "#344054",
+                            fontWeight: "bold",
+                            fontSize: "16px",
                           }}
-                        />
-                      )}
-                    </div>
-                  )}
-                </Upload>
+                          onClick={() => setLogoFile(null)}
+                        >
+                          ×
+                        </span>
+                        {/* ✅ Preview */}
+                        {logoFile.originFileObj && (
+                          <img
+                            src={URL.createObjectURL(logoFile.originFileObj)}
+                            alt="Preview"
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              objectFit: "cover",
+                              borderRadius: "8px",
+                            }}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </Upload>
 
-                {/* {logoFile && (
+                  {/* {logoFile && (
                   <div
                     style={{
                       display: "flex",
@@ -257,74 +303,106 @@ const AddStaticTestimonial = () => {
                     </span>
                   </div>
                 )} */}
+                </div>
               </div>
-            </div>
 
-            {/* Client Image */}
-            <div className="add-video-test-container">
-              <p className="add-form-title">Client Image (Optional)</p>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                  flexWrap: "wrap",
-                }}
-              >
-                <Upload
-                  showUploadList={false}
-                  onChange={handleClientImageChange}
-                  fileList={clientImageFile ? [clientImageFile] : []}
-                  beforeUpload={() => false}
+              {/* Client Image */}
+              <div className="add-video-test-container">
+                <p className="add-form-title">Client Image (Optional)</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                    flexWrap: "wrap",
+                  }}
                 >
-                  <button className="Upload-button-reuable">
-                    <img
-                      style={{ width: "24px", height: "24px" }}
-                      src="/Images/Project/Cloud-Upload.svg"
-                      alt="upload"
-                    />
-                    Upload
-                  </button>
-                  {clientImageFile && (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}
-                    >
-                      <p className="selectedFileName">{clientImageFile.name}</p>
-                      <span
+                  <Upload
+                    showUploadList={false}
+                    onChange={handleClientImageChange}
+                    fileList={clientImageFile ? [clientImageFile] : []}
+                    beforeUpload={(file) => {
+                      const isAllowedType = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif",
+                        "image/webp",
+                      ].includes(file.type);
+                      if (!isAllowedType) {
+                        message.error(
+                          "Only JPG, PNG, GIF, and WEBP images are allowed"
+                        );
+                        return Upload.LIST_IGNORE; // Prevent file from being added
+                      }
+                      return false; // Prevent auto-upload
+                    }}
+                  >
+                    {!clientImageFile && logoPreviewUrl && (
+                      <img
+                        src={
+                          clientImageFile?.originFileObj
+                            ? URL.createObjectURL(clientImageFile.originFileObj)
+                            : clientImagePreviewUrl
+                        }
+                        alt="Preview"
                         style={{
-                          cursor: "pointer",
-                          color: "#344054",
-                          fontWeight: "bold",
-                          fontSize: "16px",
+                          width: "100px",
+                          height: "100px",
+                          objectFit: "cover",
+                          borderRadius: "8px",
                         }}
-                        onClick={() => setClientImageFile(null)}
+                      />
+                    )}
+                    <button className="Upload-button-reuable">
+                      <img
+                        style={{ width: "24px", height: "24px" }}
+                        src="/Images/Project/Cloud-Upload.svg"
+                        alt="upload"
+                      />
+                      Upload
+                    </button>
+                    {clientImageFile && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
                       >
-                        ×
-                      </span>
-                      {/* ✅ Preview */}
-                      {clientImageFile.originFileObj && (
-                        <img
-                          src={URL.createObjectURL(
-                            clientImageFile.originFileObj
-                          )}
-                          alt="Preview"
+                        <p className="selectedFileName">
+                          {clientImageFile.name}
+                        </p>
+                        <span
                           style={{
-                            width: "100px",
-                            height: "100px",
-                            objectFit: "cover",
-                            borderRadius: "8px",
+                            cursor: "pointer",
+                            color: "#344054",
+                            fontWeight: "bold",
+                            fontSize: "16px",
                           }}
-                        />
-                      )}
-                    </div>
-                  )}
-                </Upload>
+                          onClick={() => setClientImageFile(null)}
+                        >
+                          ×
+                        </span>
+                        {/* ✅ Preview */}
+                        {clientImageFile.originFileObj && (
+                          <img
+                            src={URL.createObjectURL(
+                              clientImageFile.originFileObj
+                            )}
+                            alt="Preview"
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              objectFit: "cover",
+                              borderRadius: "8px",
+                            }}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </Upload>
 
-                {/* {clientImageFile && (
+                  {/* {clientImageFile && (
                   <div
                     style={{
                       display: "flex",
@@ -346,28 +424,28 @@ const AddStaticTestimonial = () => {
                     </span>
                   </div>
                 )} */}
+                </div>
               </div>
             </div>
+            <div
+              className="add-video-test-container"
+              style={{ display: "flex", gap: "12px", flexDirection: "column" }}
+            >
+              <p className="add-form-title" style={{ marginBottom: 0 }}>
+                List on Website
+              </p>
+              <Switch
+                style={{ width: "50px" }}
+                checked={shouldList}
+                onChange={(checked) => setShouldList(checked)}
+              />
+            </div>
+            <button className="video-testimonial-button" onClick={handleSubmit}>
+              {isEditMode ? "Update Testimonial" : "Submit Request"}
+            </button>
           </div>
-          <div
-            className="add-video-test-container"
-            style={{ display: "flex", gap: "12px", flexDirection: "column" }}
-          >
-            <p className="add-form-title" style={{ marginBottom: 0 }}>
-              List on Website
-            </p>
-            <Switch
-              style={{ width: "50px" }}
-              checked={shouldList}
-              onChange={(checked) => setShouldList(checked)}
-            />
-          </div>
-          <button className="video-testimonial-button" onClick={handleSubmit}>
-            {isEditMode ? "Update Testimonial" : "Submit Request"}
-          </button>
         </div>
       </div>
-    </div>
     </>
   );
 };

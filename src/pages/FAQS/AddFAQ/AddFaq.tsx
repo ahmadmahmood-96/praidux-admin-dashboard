@@ -33,6 +33,18 @@ const AddFaq = () => {
       },
     }
   );
+  const handleSubmit = () => {
+  if (!question.trim()) {
+    message.warning("Please enter a question");
+    return;
+  }
+  if (!answer.trim()) {
+    message.warning("Please enter an answer");
+    return;
+  }
+  submitFaq();
+};
+
   return (
     <>
       <LoadingSpinner isLoading={isLoading} />
@@ -71,7 +83,7 @@ const AddFaq = () => {
           </div>
           <button
             className="Add-faq-button"
-            onClick={() => submitFaq()}
+              onClick={handleSubmit}
             disabled={isLoading}
           >
             {isLoading ? (
