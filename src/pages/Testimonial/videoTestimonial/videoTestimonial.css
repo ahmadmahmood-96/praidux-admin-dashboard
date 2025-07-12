@@ -231,6 +231,11 @@
   .video-card-second {
     gap: 20px;
   }
+  .video-play-button {
+    position: absolute;
+    top: 68%;
+    right: 93%;
+}
 }
 @media (max-width: 760px) {
   .video-section {
@@ -274,7 +279,12 @@
     flex-direction: column;
     align-items: start;
   }
-
+  
+    .video-play-button {
+        position: absolute;
+        top: 56%;
+        right: 89%;
+    }
   .video-testimonial-top-content {
     gap: 20px;
   }
@@ -283,6 +293,12 @@
   .video-section {
     height: 180px;
   }
+      .video-play-button {
+        position: absolute;
+        top: 52%;
+        right: 89%;
+    }
+
   .testimonial-video-description {
     font-size: 13px;
   }
