@@ -221,7 +221,11 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
         >
           {getVisiblePages(totalPages, currentPage).map((page, idx) =>
             page === "..." ? (
-              <span key={`dots-${idx}`} style={{ padding: "0 4px" }}>
+              <span
+               className={`page-button ${
+                  typeof page === "number" && page === currentPage ? "active" : ""
+                }`}
+                 key={`dots-${idx}`} style={{ padding: "0 4px" }}>
                 ...
               </span>
             ) : (

@@ -230,7 +230,10 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
           {" "}
          {getVisiblePages(totalPages, currentPage).map((page, idx) =>
             page === "..." ? (
-              <span key={`dots-${idx}`} style={{ padding: "0 4px" }}>
+              <span key={`dots-${idx}`} style={{ padding: "0 4px" }}
+               className={`page-button ${
+                  typeof page === "number" && page === currentPage ? "active" : ""
+                }`}>
                 ...
               </span>
             ) : (
