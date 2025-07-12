@@ -22,3 +22,15 @@
     gap: 20px;
   }
 }
+/* Hide all page buttons on small devices except the current one */
+@media (max-width: 480px) {
+  .pagination-container .page-button {
+    display: none !important;
+  }
+
+  .pagination-container .page-button.active {
+    display: inline-block !important;
+    font-weight: bold;
+  }
+}
+

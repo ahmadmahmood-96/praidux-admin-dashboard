@@ -13,7 +13,7 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import client from "../../utils/axios";
 import { ConfirmModal } from "../../components/ui/index.tsx";
 import { useNavigate } from "react-router-dom";
-import "./faq.css"
+import "./faq.css";
 
 const fetchFaqs = async () => {
   const { data } = await client.get("/faq/view-faqs");
@@ -57,29 +57,36 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
     currentPage * pageSize
   );
 
-  // Smart pagination display logic
-  const visiblePages = () => {
-    if (totalPages <= 6)
+  const getVisiblePages = (totalPages: number, currentPage: number) => {
+    const pages: (number | "...")[] = [];
+
+    if (totalPages <= 3) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
-    if (currentPage <= 3) return [1, 2, 3, 4, "...", totalPages];
-    if (currentPage >= totalPages - 2)
-      return [
-        1,
-        "...",
-        totalPages - 3,
-        totalPages - 2,
-        totalPages - 1,
-        totalPages,
-      ];
-    return [
-      1,
-      "...",
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      "...",
-      totalPages,
-    ];
+    }
+
+    pages.push(1); // Always include first page
+
+    if (currentPage > 3) {
+      pages.push("...");
+    }
+
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (currentPage < totalPages - 2) {
+      pages.push("...");
+    }
+
+    if (totalPages > 1) {
+      pages.push(totalPages); // Always include last page
+    }
+
+    // Remove duplicates just in case
+    return [...new Set(pages)];
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -203,35 +210,43 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
           Previous
         </button>
 
-        <div style={{ display: "flex", gap: "4px" }}>
-          {" "}
-          {visiblePages().map((page, idx) =>
+        <div
+          className="pagination-container"
+          style={{
+            display: "flex",
+            gap: "4px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {getVisiblePages(totalPages, currentPage).map((page, idx) =>
             page === "..." ? (
-              <span key={idx} style={{ padding: "0 4px" }}>
+              <span key={`dots-${idx}`} style={{ padding: "0 4px" }}>
                 ...
               </span>
             ) : (
               <button
-                key={page}
-                // type={page === currentPage ? "primary" : "default"}
+                key={`page-${page}`}
+                className={`page-button ${
+                  page === currentPage ? "active" : ""
+                }`}
+                onClick={() => setCurrentPage(Number(page))}
                 style={{
-                  minWidth: 20,
-                  background: "transparent",
-                  height: 20,
-                  fontWeight: page === currentPage ? "600" : "400",
-                  fontFamily: "Albert Sans",
+                  minWidth: "24px",
+                  height: "24px",
                   border: "none",
-                  padding: "0px",
-                  boxShadow: "none",
-                  margin: "0",
+                  borderRadius: "4px",
+                  background: "transparent",
+                  fontWeight: page === currentPage ? "600" : "400",
+                  cursor: "pointer",
                 }}
-                onClick={() => setCurrentPage(page as number)}
               >
                 {page}
               </button>
             )
           )}
         </div>
+
         <button
           // size="small"
           style={{
@@ -247,7 +262,11 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
           onClick={() => setCurrentPage((prev) => prev + 1)}
         >
           Next
-          <img className="arrowRight" src="/Images/arrow-right.svg" alt="left" />
+          <img
+            className="arrowRight"
+            src="/Images/arrow-right.svg"
+            alt="left"
+          />
         </button>
       </Box>
     </div>
@@ -267,7 +286,7 @@ const headerCellStyle = {
 
 const rowCellStyle = {
   fontFamily: "Albert Sans",
-  VscWhitespace:"nowrap",
+  VscWhitespace: "nowrap",
   fontWeight: "400",
   fontSize: "14px",
   lineHeight: "20px",

@@ -56,29 +56,36 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
     currentPage * pageSize
   );
 
-  // Smart pagination display logic
-  const visiblePages = () => {
-    if (totalPages <= 6)
+    const getVisiblePages = (totalPages: number, currentPage: number) => {
+    const pages: (number | "...")[] = [];
+
+    if (totalPages <= 3) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
-    if (currentPage <= 3) return [1, 2, 3, 4, "...", totalPages];
-    if (currentPage >= totalPages - 2)
-      return [
-        1,
-        "...",
-        totalPages - 3,
-        totalPages - 2,
-        totalPages - 1,
-        totalPages,
-      ];
-    return [
-      1,
-      "...",
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      "...",
-      totalPages,
-    ];
+    }
+
+    pages.push(1); // Always include first page
+
+    if (currentPage > 3) {
+      pages.push("...");
+    }
+
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (currentPage < totalPages - 2) {
+      pages.push("...");
+    }
+
+    if (totalPages > 1) {
+      pages.push(totalPages); // Always include last page
+    }
+
+    // Remove duplicates just in case
+    return [...new Set(pages)];
   };
 
   if (isLoading) return  <LoadingSpinner
@@ -215,33 +222,31 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
             alignItems: "center",
           }}
         >
-          <img src="/Images/arrow-left.svg" alt="left" />
+          <img className="arrowRight" src="/Images/arrow-left.svg" alt="left" />
           Previous
         </button>
 
         <div style={{ display: "flex", gap: "4px" }}>
           {" "}
-          {visiblePages().map((page, idx) =>
+         {getVisiblePages(totalPages, currentPage).map((page, idx) =>
             page === "..." ? (
-              <span key={idx} style={{ padding: "0 4px" }}>
+              <span key={`dots-${idx}`} style={{ padding: "0 4px" }}>
                 ...
               </span>
             ) : (
               <button
-                key={page}
-                // type={page === currentPage ? "primary" : "default"}
+                key={`page-${page}`}
+                 className={`page-button ${page === currentPage ? "active" : ""}`}
+                onClick={() => setCurrentPage(Number(page))}
                 style={{
-                  minWidth: 20,
-                  background: "transparent",
-                  height: 20,
+                  minWidth: "24px",
+                  height: "24px",
+                  border:  "none",
+                  borderRadius: "4px",
+                  background: "none",
                   fontWeight: page === currentPage ? "600" : "400",
-                  fontFamily: "Albert Sans",
-                  border: "none",
-                  padding: "0px",
-                  boxShadow: "none",
-                  margin: "0",
+                  cursor: "pointer",
                 }}
-                onClick={() => setCurrentPage(page as number)}
               >
                 {page}
               </button>
@@ -263,7 +268,7 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
           onClick={() => setCurrentPage((prev) => prev + 1)}
         >
           Next
-          <img src="/Images/arrow-right.svg" alt="left" />
+          <img className="arrowRight" src="/Images/arrow-right.svg" alt="left" />
         </button>
       </Box>
     </div>
