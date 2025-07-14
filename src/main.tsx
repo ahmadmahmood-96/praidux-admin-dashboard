@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { IntlProvider } from "react-intl";
+
 import {
   ConfigProvider,
   theme as antdTheme,
@@ -9,6 +10,7 @@ import {
   notification,
 } from "antd";
 import App from "./App.tsx";
+import './index.css'
 import "./styles/index.less";
 import { ThemeProvider, useTheme } from "./context/themeContext.tsx";
 

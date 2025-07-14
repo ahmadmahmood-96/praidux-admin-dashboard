@@ -1,5 +1,6 @@
 import { Button, Descriptions, Tooltip, Modal, notification } from "antd";
 import { useNavigate } from "react-router-dom";
+import { ButtonProps } from "antd/es/button";
 import {
   PlusOutlined,
   LogoutOutlined,
@@ -110,10 +111,13 @@ interface ConfirmModalProps {
   //icon: JSX.Element; // Add the icon prop here
   onOk?: () => void;
   onCancel?: () => void;
+   okButtonProps?: ButtonProps;        // ✅ add this
+  cancelButtonProps?: ButtonProps;
 }
 
 export const ConfirmModal = (props: ConfirmModalProps) => {
-  const { className, title, content, okText, cancelText, onOk, onCancel } =
+  const { className, title, content, okText, cancelText, onOk, onCancel ,okButtonProps,
+    cancelButtonProps} =
     props;
   const confirmOkModal = () => {
     Modal.confirm({
@@ -130,6 +134,8 @@ export const ConfirmModal = (props: ConfirmModalProps) => {
       cancelText: cancelText,
       onOk: onOk,
       onCancel: onCancel,
+       okButtonProps,        // ✅ forward the button props
+      cancelButtonProps,
     });
   };
 

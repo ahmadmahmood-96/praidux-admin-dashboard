@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { RiMenuFoldLine, RiMenuUnfoldLine } from "react-icons/ri";
-import { IoCarSportOutline } from "react-icons/io5";
-import { HiOutlineUsers } from "react-icons/hi2";
 import { GrHomeRounded } from "react-icons/gr";
-import { RiListSettingsFill } from "react-icons/ri";
+import {
+  FileTextOutlined,
+  QuestionCircleOutlined,
+  CommentOutlined,
+} from "@ant-design/icons";
 
 import { Layout, Menu, Button, theme, Dropdown, Avatar } from "antd";
 import { Link, useLocation, Outlet } from "react-router-dom";
@@ -40,14 +42,43 @@ const AppLayout: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   const [selectedItem, setSelectedItem] = useState("");
   const {
     token: { colorBgContainer, colorPrimary },
   } = theme.useToken();
   const location = useLocation();
   useEffect(() => {
-    const pathName = location.pathname.split("/");
-    setSelectedItem(pathName[1]);
+    const path = location.pathname;
+    let pathName = path.split("/")[1];
+    // const testimonialRelatedRoutes = [
+    //   "testimonials",
+    //   "add-video-testimonial",
+    //   "edit-video-testimonial",
+    // ];
+    // if (testimonialRelatedRoutes.includes(pathName)) {
+    //   pathName = "testimonials";
+    // }
+    if (["testimonials", "add-video-testimonial" , "add-static-testimonial"].includes(pathName)) {
+      pathName = "testimonials";
+    }
+     if (["blogs", "add-Blog"].includes(pathName)) {
+      pathName = "blogs";
+    }
+
+    if (["add-Faq", "update-faq"].includes(pathName)) {
+      pathName = "faqs";
+    }
+    if (
+      path === "/" ||
+      path === "/add-project" ||
+      path.startsWith("/update-project/")
+    ) {
+      setSelectedItem("");
+    } else {
+      setSelectedItem(pathName);
+    }
+
     if (window.innerWidth <= 1024) {
       setCollapsed(true);
     }
@@ -65,19 +96,28 @@ const AppLayout: React.FC = () => {
   };
 
   const allowedRolesByMenuItem: { [key: string]: string[] } = {
-    cars: ["admin"],
-    "car-config": ["admin"],
-    users: ["admin"],
+    // cars: ["admin"],
+    // "car-config": ["admin"],
+    // users: ["admin"],
+    testimonials: ["admin"],
+    faqs: ["admin"],
+    blogs: ["admin"],
   };
 
   const getMenuIcon = (menuItem: string) => {
     switch (menuItem) {
-      case "cars":
-        return <IoCarSportOutline />;
-      case "car-config":
-        return <RiListSettingsFill />;
-      case "users":
-        return <HiOutlineUsers />;
+      // case "cars":
+      //   return <IoCarSportOutline />;
+      // case "car-config":
+      //   return <RiListSettingsFill />;
+      // case "users":
+      //   return <HiOutlineUsers />;
+      case "testimonials":
+        return <CommentOutlined />;
+      case "faqs":
+        return <QuestionCircleOutlined />;
+      case "blogs":
+        return <FileTextOutlined />;
       default:
         return null;
     }
@@ -119,15 +159,15 @@ const AppLayout: React.FC = () => {
           <div className="logo">
             {collapsed ? (
               <img
-                src="/hikar-logo.png"
-                alt="Hikar logo"
+                src="/praidux-logo.png"
+                alt="Praidux logo"
                 width="24"
                 height="20"
                 style={{ width: 50 }}
               />
             ) : (
               <img
-                src="/hikar-logo.png"
+                src="/praidux-logo.png"
                 alt="Hikar Logo"
                 width="150"
                 height="41"
@@ -143,7 +183,7 @@ const AppLayout: React.FC = () => {
             onClick={(e) => setSelectedItem(e.key)}
           >
             <Menu.Item key="" icon={<GrHomeRounded />}>
-              <Link to="/">Home</Link>
+              <Link to="/">Projects</Link>
             </Menu.Item>
             {getMenuItems()}
           </Menu>

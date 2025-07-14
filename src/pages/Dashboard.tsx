@@ -1,122 +1,191 @@
-import { useState, ReactNode } from "react";
-import { DatePicker, Row, Col, message } from "antd";
-import { Dayjs } from "dayjs";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import client from "../utils/axios";
 import { useQuery } from "react-query";
 import LoadingSpinner from "../components/ui/LoaderSpinner";
-import StatsCard from "../components/cards/StatsCard";
-import { EyeOutlined, UserOutlined } from "@ant-design/icons";
-import DescriptionTitle from "../components/ui/DescriptionTitle";
+import "./dashboard.css";
+import { message } from "antd";
+import { useQueryClient } from "react-query";
+import ProjectCard from "../components/projectCard/projectCardDisplay";
+import { ConfirmModal } from "../components/ui/index.tsx";
+const Dashboard = () => {
+  const queryClient = useQueryClient();
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const navigate = useNavigate();
+  const categoryMap: { [key: string]: string } = {
+    All: "All",
+    Mobile: "Mobile App",
+    Web: "Web",
+    IOS: "IOS",
+  };
 
-const { RangePicker } = DatePicker;
+  const fetchProjects = async () => {
+    const { data } = await client.get("/project/view-projects");
+    console.log("result of Project", data.result);
+    return data.result;
+  };
 
-interface Stats {
-  totalVisits: number;
-  uniqueVisitors: number;
-  startDate?: string;
-  endDate?: string;
-}
+  const toggleCheck = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
 
-interface StatsCardConfig {
-  title: string;
-  key: string; // the key from the stats object (e.g. "totalVisits")
-  value: number;
-  icon: ReactNode;
-  iconColor?: string;
-}
+  const handleDelete = (id?: string) => {
+    const idsToDelete = id ? [id] : selectedIds;
 
-const fetchVisitStats = async (
-  startDate?: string,
-  endDate?: string
-): Promise<Stats> => {
-  try {
-    const { data } = await client.get<Stats>("visit/stats", {
-      params: {
-        startDate,
-        endDate,
+    ConfirmModal({
+      className: "delete-modal",
+      title: "Delete Project",
+      content: "Are you sure you want to delete the selected project?",
+      okText: "Delete",
+      cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          await Promise.all(
+            idsToDelete.map((projectId) =>
+              client.delete(`/project/delete-project/${projectId}`)
+            )
+          );
+          console.log("Deleted:", idsToDelete);
+          setSelectedIds([]);
+          await queryClient.invalidateQueries("AllProjects");
+        } catch (error) {
+          console.error("Failed to delete:", error);
+        }
+      },
+      onCancel: () => {
+        console.log("Delete cancelled");
+      },
+      okButtonProps: {
+        className: "orange-button", // 👈 Add your class here
       },
     });
-    return data;
-  } catch (err) {
-    message.error("Failed to fetch stats");
-    throw err;
-  }
-};
+  };
 
-const Dashboard = () => {
-  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null);
+  const handlePause = async (id?: string) => {
+    const idsToPause = id ? [id] : selectedIds;
 
-  const { data: stats, isLoading } = useQuery(
-    ["visit-stats", dateRange],
-    () => {
-      if (dateRange) {
-        const [start, end] = dateRange;
-        return fetchVisitStats(start.toISOString(), end.toISOString());
-      }
-      return fetchVisitStats();
-    }
-  );
-
-  const statCards: StatsCardConfig[] = [
-    {
-      title: "Total Visits",
-      key: "totalVisits",
-      value: stats?.totalVisits || 0,
-      icon: <EyeOutlined />,
-      iconColor: "#1890ff",
-    },
-    {
-      title: "Unique Visitors",
-      key: "uniqueVisitors",
-      value: stats?.uniqueVisitors || 0,
-      icon: <UserOutlined />,
-      iconColor: "#52c41a",
-    },
-    // Add more stat cards here if needed
-  ];
-
-  const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
-    if (dates?.[0] && dates?.[1]) {
-      setDateRange([dates[0], dates[1]]);
-    } else {
-      setDateRange(null);
+    try {
+      await Promise.all(
+        idsToPause.map((projectId) =>
+          client.put(`/project/update-list-status/${projectId}`, {
+            listOnWebsite: false,
+          })
+        )
+      );
+      message.success("Project paused.");
+      setSelectedIds([]);
+      await queryClient.invalidateQueries("AllProjects");
+    } catch (err) {
+      console.error("Pause error:", err);
+      message.error("Failed to pause project(s).");
     }
   };
 
+  const {
+    data: projects = [],
+    isLoading,
+    // isError,
+  } = useQuery(["AllProjects"], fetchProjects);
+  const filteredProjects = projects.filter((proj: any) => {
+    const matchesCategory =
+      categoryMap[selectedCategory] === "All" ||
+      proj.mainCategory === categoryMap[selectedCategory];
+
+    const matchesSearch = proj.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
+
+  if (isLoading) return <LoadingSpinner isLoading={true} />;
   return (
     <>
-      <LoadingSpinner isLoading={isLoading} />
-      <div style={{ padding: 24 }}>
-        <Row gutter={16} justify="space-between" align="middle">
-          <Col>
-            <DescriptionTitle
-              title="Analytics Overview"
-              description="Number of unique and total visitors visited hikar website"
-            />
-          </Col>
-          <Col>
-            <RangePicker
-              size="large"
-              value={dateRange}
-              onChange={handleDateChange}
-              allowClear
-            />
-          </Col>
-        </Row>
+      {/* <LoadingSpinner isLoading={isLoading} /> */}
 
-        <Row gutter={16}>
-          {statCards.map((card, index) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={card.key}>
-              <StatsCard
-                key={index}
-                title={card.title}
-                value={card.value}
-                icon={card.icon}
-                iconColor={card.iconColor}
+      <div className="Dashboard-container-Main">
+        <div className="Dashboard-container-Main-header">
+          <div
+            style={{ display: "flex", gap: "16px", alignItems: "center" }}
+            className="top-later"
+          >
+            <p className="Project-Dashboard-heading">Projects</p>
+            <div className="button-categories-project">
+              {Object.keys(categoryMap).map((label, index) => (
+                <button
+                  key={label}
+                  className={`category-button ${
+                    selectedCategory === label ? "selected" : ""
+                  } ${index === 0 ? "first" : ""} ${
+                    index === Object.keys(categoryMap).length - 1 ? "last" : ""
+                  }`}
+                  onClick={() => setSelectedCategory(label)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "10px" }} className="addsearch">
+            <div className="search-project-main-div">
+              <img src="/Images/Project/search.svg" alt="search" />
+              <input
+                placeholder="Search here..."
+                className="Search-project"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </Col>
+              <img src="/Images/Project/SearchKey.svg" alt="search" />
+            </div>
+            <button
+              className="Add-projectbutton"
+              onClick={() => navigate("add-project")}
+            >
+              Add Project
+            </button>
+          </div>
+        </div>
+        {selectedIds.length > 0 && (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "end",
+              gap: "10px",
+            }}
+          >
+            <button className="Add-projectbutton" onClick={() => handlePause()}>
+              Pause
+            </button>
+            <button
+              className="Add-projectbutton"
+              onClick={() => handleDelete()}
+            >
+              Delete
+            </button>
+          </div>
+        )}
+        <div className="project-card-containers">
+          {filteredProjects.map((project: any) => (
+            <ProjectCard
+              key={project._id}
+              title={project.title}
+              mainCategory={project.mainCategory}
+              categories={project.categories}
+              image={project.logo}
+              checked={selectedIds.includes(project._id)}
+              onToggleCheck={() => toggleCheck(project._id)}
+              onMoreInfo={() => console.log("More info about:", project._id)}
+              onDelete={() => handleDelete(project._id)}
+              onPause={() => handlePause(project._id)}
+              onEdit={() => navigate(`/update-project/${project._id}`)}
+            />
           ))}
-        </Row>
+        </div>
       </div>
     </>
   );
