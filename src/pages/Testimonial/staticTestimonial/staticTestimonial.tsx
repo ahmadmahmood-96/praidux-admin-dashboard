@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ConfirmModal } from "../../../components/ui";
 import { message } from "antd";
+import { useQueryClient } from "react-query";
+
 
 const fetchStaticTestimonials = async () => {
   const res = await client.get("/staticTestimonial/view-static-testimonials");
@@ -21,8 +23,8 @@ const StaticTestimonial = () => {
     data: testimonials,
     isLoading,
     isError,
-    refetch,
   } = useQuery("staticTestimonials", fetchStaticTestimonials);
+const queryClient = useQueryClient();
 
   const toggleCheck = (id: string) => {
     setSelectedIds((prev) =>
@@ -48,7 +50,8 @@ const StaticTestimonial = () => {
           );
           message.success("Deleted successfully.");
           setSelectedIds([]);
-          await refetch();
+        await queryClient.invalidateQueries("staticTestimonials");
+
         } catch (err) {
           console.error("Delete failed", err);
           message.error("Failed to delete.");
@@ -70,7 +73,8 @@ const StaticTestimonial = () => {
       );
       message.success("Paused successfully.");
       setSelectedIds([]);
-      await refetch();
+      await queryClient.invalidateQueries("staticTestimonials");
+
     } catch (err) {
       console.error("Pause failed", err);
       message.error("Failed to pause.");

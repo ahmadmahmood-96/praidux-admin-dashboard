@@ -7,6 +7,8 @@ import { useState } from "react";
 import { ConfirmModal } from "../../../components/ui/index";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "react-query";
+
 const fetchTestimonials = async () => {
   const res = await client.get("/videoTestimonial/view-video-testimonials");
   return res.data.result;
@@ -14,6 +16,7 @@ const fetchTestimonials = async () => {
 
 const VideoTestimonial = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const toggleCheck = (id: string) => {
     setSelectedIds((prev) =>
@@ -39,7 +42,7 @@ const handleDelete = async (id?: string) => {
         );
         message.success("Deleted successfully.");
         setSelectedIds([]);
-        await refetch();
+       await queryClient.invalidateQueries("testimonials");
       } catch (err) {
         console.error("Delete failed", err);
         message.error("Failed to delete.");
@@ -61,7 +64,7 @@ const handlePause = async (id?: string) => {
     );
     message.success("Paused successfully.");
     setSelectedIds([]);
-    await refetch();
+     await queryClient.invalidateQueries("testimonials");
   } catch (err) {
     console.error("Pause failed", err);
     message.error("Failed to pause.");
@@ -73,7 +76,6 @@ const handlePause = async (id?: string) => {
     data: testimonials,
     isLoading,
     isError,
-    refetch,
   } = useQuery("testimonials", fetchTestimonials);
 
   if (isLoading) return <LoadingSpinner isLoading={true} />;

@@ -5,9 +5,11 @@ import { useQuery } from "react-query";
 import LoadingSpinner from "../components/ui/LoaderSpinner";
 import "./dashboard.css";
 import { message } from "antd";
+import { useQueryClient } from "react-query";
 import ProjectCard from "../components/projectCard/projectCardDisplay";
 import { ConfirmModal } from "../components/ui/index.tsx";
 const Dashboard = () => {
+  const queryClient = useQueryClient();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -49,7 +51,7 @@ const Dashboard = () => {
           );
           console.log("Deleted:", idsToDelete);
           setSelectedIds([]);
-          await refetch();
+          await queryClient.invalidateQueries("AllProjects");
         } catch (error) {
           console.error("Failed to delete:", error);
         }
@@ -76,7 +78,7 @@ const Dashboard = () => {
       );
       message.success("Project paused.");
       setSelectedIds([]);
-      await refetch();
+      await queryClient.invalidateQueries("AllProjects");
     } catch (err) {
       console.error("Pause error:", err);
       message.error("Failed to pause project(s).");
@@ -87,7 +89,6 @@ const Dashboard = () => {
     data: projects = [],
     isLoading,
     // isError,
-    refetch,
   } = useQuery(["AllProjects"], fetchProjects);
   const filteredProjects = projects.filter((proj: any) => {
     const matchesCategory =
@@ -105,7 +106,7 @@ const Dashboard = () => {
   return (
     <>
       {/* <LoadingSpinner isLoading={isLoading} /> */}
-      
+
       <div className="Dashboard-container-Main">
         <div className="Dashboard-container-Main-header">
           <div

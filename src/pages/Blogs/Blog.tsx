@@ -1,13 +1,9 @@
 import { useState } from "react";
-import "./Blog.css";
 import { useNavigate } from "react-router-dom";
 import BlogTable from "./BlogTable";
-// import FaqTable from "./faqtable"
-
 const Blogs = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  //   if (isLoading) return <LoadingSpinner isLoading={true} />;
   return (
     <>
       <div className="FAQ-CONTAINER">
@@ -34,7 +30,6 @@ const Blogs = () => {
           </div>
         </div>
      <BlogTable searchQuery={searchQuery} />
-
       </div>
     </>
   );
