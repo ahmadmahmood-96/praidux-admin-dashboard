@@ -51,18 +51,16 @@ const AppLayout: React.FC = () => {
   useEffect(() => {
     const path = location.pathname;
     let pathName = path.split("/")[1];
-    // const testimonialRelatedRoutes = [
-    //   "testimonials",
-    //   "add-video-testimonial",
-    //   "edit-video-testimonial",
-    // ];
-    // if (testimonialRelatedRoutes.includes(pathName)) {
-    //   pathName = "testimonials";
-    // }
-    if (["testimonials", "add-video-testimonial" , "add-static-testimonial"].includes(pathName)) {
+    if (
+      [
+        "testimonials",
+        "add-video-testimonial",
+        "add-static-testimonial",
+      ].includes(pathName)
+    ) {
       pathName = "testimonials";
     }
-     if (["blogs", "add-Blog"].includes(pathName)) {
+    if (["blogs", "add-Blog"].includes(pathName)) {
       pathName = "blogs";
     }
 
@@ -96,9 +94,6 @@ const AppLayout: React.FC = () => {
   };
 
   const allowedRolesByMenuItem: { [key: string]: string[] } = {
-    // cars: ["admin"],
-    // "car-config": ["admin"],
-    // users: ["admin"],
     testimonials: ["admin"],
     faqs: ["admin"],
     blogs: ["admin"],
@@ -106,12 +101,6 @@ const AppLayout: React.FC = () => {
 
   const getMenuIcon = (menuItem: string) => {
     switch (menuItem) {
-      // case "cars":
-      //   return <IoCarSportOutline />;
-      // case "car-config":
-      //   return <RiListSettingsFill />;
-      // case "users":
-      //   return <HiOutlineUsers />;
       case "testimonials":
         return <CommentOutlined />;
       case "faqs":
@@ -159,16 +148,15 @@ const AppLayout: React.FC = () => {
           <div className="logo">
             {collapsed ? (
               <img
-                src="/praidux-logo.png"
+                src="/praidux-small-logo.png"
                 alt="Praidux logo"
-                width="24"
-                height="20"
-                style={{ width: 50 }}
+                width="14"
+                height="28"
               />
             ) : (
               <img
                 src="/praidux-logo.png"
-                alt="Hikar Logo"
+                alt="Praidux Logo"
                 width="150"
                 height="41"
                 style={{ width: "120px" }}
