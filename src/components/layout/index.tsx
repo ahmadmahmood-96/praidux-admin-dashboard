@@ -196,7 +196,7 @@ const AppLayout: React.FC = () => {
               />
             </div>
             <div className="user-details">
-              <ThemeToggle />
+              {/* <ThemeToggle /> */}
               <div className="user-content">
                 <span className="user-name">{user.name}</span>
                 <span className="user-role">{user.role}</span>
@@ -217,7 +217,7 @@ const AppLayout: React.FC = () => {
                 <div className="user-action">
                   <Avatar
                     size={41}
-                    style={{ backgroundColor: colorPrimary }}
+                    style={{ backgroundColor: "#FF5F1F" }}
                     icon={<UserOutlined />}
                   />
                 </div>
