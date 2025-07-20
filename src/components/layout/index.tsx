@@ -5,6 +5,7 @@ import { GrHomeRounded } from "react-icons/gr";
 import {
   FileTextOutlined,
   QuestionCircleOutlined,
+  PhoneOutlined,
   CommentOutlined,
 } from "@ant-design/icons";
 
@@ -97,6 +98,7 @@ const AppLayout: React.FC = () => {
     testimonials: ["admin"],
     faqs: ["admin"],
     blogs: ["admin"],
+    contact: ["admin"],
   };
 
   const getMenuIcon = (menuItem: string) => {
@@ -107,6 +109,8 @@ const AppLayout: React.FC = () => {
         return <QuestionCircleOutlined />;
       case "blogs":
         return <FileTextOutlined />;
+      case "contact":
+        return <PhoneOutlined />;
       default:
         return null;
     }

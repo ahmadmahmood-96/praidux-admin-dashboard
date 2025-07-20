@@ -19,7 +19,13 @@
   flex-wrap: wrap;
 } */
 .Static-Testimonial-card {
-  width: 398px;
+
+  width: 100%;               /* take full width of the column */
+  display: inline-block;     /* necessary for masonry layout */
+  break-inside: avoid;       /* prevent splitting */
+  margin-bottom: 20px;
+
+
   background: #ffffff;
   border-radius: 8px;
   height: fit-content;
@@ -59,7 +65,7 @@
 }
 .project-logo-image-static {
   height: 239px;
-  width: 370px;
+  width: 100%;
   /* background: #ff5f1f; */
   border-radius: 8px;
 }
@@ -96,14 +102,36 @@
  gap: 16px;
 } */
 
-.testimonial-containers-stat,
-.static-containers-stat {
-  /* Masonry via CSS Columns */
-  column-width: 398px; /* min card width = card’s own width */
-  column-gap: 16px; /* same gutter you already used */
-  /* nice-to‑have: let Masonry expand smoothly instead of snapping */
-  transition: column-width 0.2s ease-in-out;
+
+  .static-containers-stat {
+  column-gap: 20px;
 }
+
+@media (min-width: 1440px) {
+  .static-containers-stat {
+    column-count: 3;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1440px) {
+  .static-containers-stat {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 639px) {
+  .static-containers-stat {
+    column-count: 1;
+  }
+}
+
+.card {
+  width: 100%;               /* take full width of the column */
+  display: inline-block;     /* necessary for masonry layout */
+  break-inside: avoid;       /* prevent splitting */
+  margin-bottom: 20px;
+}
+
 .project-client-name-client {
   font-family: Albert Sans;
   font-weight: 600;
