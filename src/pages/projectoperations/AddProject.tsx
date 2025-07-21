@@ -17,7 +17,7 @@ const AddProject = () => {
   const [logoFile, setLogoFile] = useState<any>(null);
   const [videoFile, setVideoFile] = useState<any>(null);
   const [imageFiles, setImageFiles] = useState<any[]>([]);
-  const [shouldList, setShouldList] = useState(false);
+  const [shouldList, setShouldList] = useState(true);
   const [title, setTitle] = useState("");
   const [projectclient, setProjectClient] = useState("");
   const [duration, setDuration] = useState("");
