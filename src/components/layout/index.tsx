@@ -14,7 +14,6 @@ import { Link, useLocation, Outlet } from "react-router-dom";
 import { ConfirmModal } from "../index.tsx";
 import "./style.less";
 import { UseAuthentication } from "../../utils/useAuthentication";
-import ThemeToggle from "../ui/ThemeToggle.tsx";
 const { Header, Sider } = Layout;
 
 const AppLayout: React.FC = () => {
@@ -46,7 +45,7 @@ const AppLayout: React.FC = () => {
 
   const [selectedItem, setSelectedItem] = useState("");
   const {
-    token: { colorBgContainer, colorPrimary },
+    token: { colorBgContainer },
   } = theme.useToken();
   const location = useLocation();
   useEffect(() => {

@@ -8,9 +8,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import client from "../../utils/axios";
-import { useNavigate } from "react-router-dom";
 import "./contact.css";
 
 const fetchContact = async () => {
@@ -24,8 +23,6 @@ const fetchContact = async () => {
 // };
 
 const ContactTable = ({ searchQuery }: { searchQuery: string }) => {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 

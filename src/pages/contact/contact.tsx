@@ -1,10 +1,8 @@
 import { useState } from "react";
 import "./contact.css";
-import { useNavigate } from "react-router-dom";
 import ContactTable from "./contactTable";
 // import FaqTable from "./faqtable"
 const Contact = () => {
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   //   if (isLoading) return <LoadingSpinner isLoading={true} />;
   return (
