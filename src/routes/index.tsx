@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Spin } from "antd";
 import { PrivateRoutes, PublicRoutes } from "./privateRoutes";
 import RoleBaseRoutes from "./roleBaseRoutes";
@@ -7,17 +7,6 @@ import AppLayout from "../components/layout";
 import Login from "../pages/login";
 import PageNotFound from "../pages/PageNotFound";
 import Dashboard from "../pages/Dashboard";
-import UsersHome from "../pages/users";
-import UsersList from "../pages/users/components/usersList";
-import AddUsers from "../pages/users/components/AddUsers";
-import CarsHome from "../pages/cars";
-import AddCar from "../pages/cars/components/addCar";
-import CarsList from "../pages/cars/components/carsList";
-import CarConfigHome from "../pages/car-config";
-import CarConfigList from "../pages/car-config/components/makeModel/configList";
-import AddCarConfig from "../pages/car-config/components/makeModel/addConfig";
-import ColorsList from "../pages/car-config/components/colors/colorList";
-import AddColor from "../pages/car-config/components/colors/addColor";
 import AddProject from "../pages/projectoperations/AddProject";
 import UpdateProject from "../pages/projectoperations/UpdateProject";
 import FAQS from "../pages/FAQS/Faqs";
@@ -28,6 +17,7 @@ import Blogs from "../pages/Blogs/Blog";
 import AddVideoTestimonial from "../pages/Testimonial/videoTestimonial/AddVideoTest/AddVideoTestimonial";
 import AddStaticTestimonial from "../pages/Testimonial/staticTestimonial/AddStaticTestimonial/AddStaticTestimonial";
 import AddBlog from "../pages/Blogs/AddBlog/AddBlog";
+import Contact from "../pages/contact/contact";
 const RenderRouter: React.FC = () => {
   return (
     <Routes>
@@ -79,6 +69,19 @@ const RenderRouter: React.FC = () => {
                 element={
                   <Suspense fallback={<Spin className="app-loading-wrapper" />}>
                     <AddProject />
+                  </Suspense>
+                }
+                allowedRoles={["admin"]}
+              />
+            }
+          ></Route>
+           <Route
+            path="contact"
+            element={
+              <RoleBaseRoutes
+                element={
+                  <Suspense fallback={<Spin className="app-loading-wrapper" />}>
+                    <Contact />
                   </Suspense>
                 }
                 allowedRoles={["admin"]}
@@ -215,7 +218,7 @@ const RenderRouter: React.FC = () => {
             }
           ></Route>
 
-          <Route
+          {/* <Route
             path="cars"
             element={
               <RoleBaseRoutes
@@ -232,8 +235,8 @@ const RenderRouter: React.FC = () => {
               <Route index element={<CarsList />} />
               <Route path="add-car" element={<AddCar />} />
             </Route>
-          </Route>
-          <Route
+          </Route> */}
+          {/* <Route
             path="car-config"
             element={
               <RoleBaseRoutes
@@ -252,8 +255,8 @@ const RenderRouter: React.FC = () => {
               <Route path="colors" element={<ColorsList />} />
               <Route path="add-colors" element={<AddColor />} />
             </Route>
-          </Route>
-          <Route
+          </Route> */}
+          {/* <Route
             path="users"
             element={
               <RoleBaseRoutes
@@ -270,7 +273,7 @@ const RenderRouter: React.FC = () => {
               <Route index element={<UsersList />} />
               <Route path="add-user/:id" element={<AddUsers />} />
             </Route>
-          </Route>
+          </Route> */}
           <Route
             path="*"
             element={

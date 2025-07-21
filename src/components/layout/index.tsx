@@ -5,6 +5,7 @@ import { GrHomeRounded } from "react-icons/gr";
 import {
   FileTextOutlined,
   QuestionCircleOutlined,
+  PhoneOutlined,
   CommentOutlined,
 } from "@ant-design/icons";
 
@@ -13,7 +14,6 @@ import { Link, useLocation, Outlet } from "react-router-dom";
 import { ConfirmModal } from "../index.tsx";
 import "./style.less";
 import { UseAuthentication } from "../../utils/useAuthentication";
-import ThemeToggle from "../ui/ThemeToggle.tsx";
 const { Header, Sider } = Layout;
 
 const AppLayout: React.FC = () => {
@@ -45,7 +45,7 @@ const AppLayout: React.FC = () => {
 
   const [selectedItem, setSelectedItem] = useState("");
   const {
-    token: { colorBgContainer, colorPrimary },
+    token: { colorBgContainer },
   } = theme.useToken();
   const location = useLocation();
   useEffect(() => {
@@ -97,6 +97,7 @@ const AppLayout: React.FC = () => {
     testimonials: ["admin"],
     faqs: ["admin"],
     blogs: ["admin"],
+    contact: ["admin"],
   };
 
   const getMenuIcon = (menuItem: string) => {
@@ -107,6 +108,8 @@ const AppLayout: React.FC = () => {
         return <QuestionCircleOutlined />;
       case "blogs":
         return <FileTextOutlined />;
+      case "contact":
+        return <PhoneOutlined />;
       default:
         return null;
     }
@@ -196,7 +199,7 @@ const AppLayout: React.FC = () => {
               />
             </div>
             <div className="user-details">
-              <ThemeToggle />
+              {/* <ThemeToggle /> */}
               <div className="user-content">
                 <span className="user-name">{user.name}</span>
                 <span className="user-role">{user.role}</span>
@@ -217,7 +220,7 @@ const AppLayout: React.FC = () => {
                 <div className="user-action">
                   <Avatar
                     size={41}
-                    style={{ backgroundColor: colorPrimary }}
+                    style={{ backgroundColor: "#FF5F1F" }}
                     icon={<UserOutlined />}
                   />
                 </div>
