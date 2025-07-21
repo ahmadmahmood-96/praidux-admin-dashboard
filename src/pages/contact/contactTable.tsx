@@ -149,12 +149,7 @@ const ContactTable = ({ searchQuery }: { searchQuery: string }) => {
                     : ""}
                 </TableCell>
                 <TableCell sx={rowCellStyle}>
-                  <a
-                    href={item.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download 
-                  >
+                  <a href={`${item.fileUrl}?fl_attachment`} download>
                     Download
                   </a>
                 </TableCell>
