@@ -26,7 +26,7 @@ const App: React.FC = () => {
   const location = useLocation();
   const currentUrl = location.pathname;
   const logError = (error: any) => {
-    console.log("app", error.response);
+    // console.log("app", error.response);
     const token = localStorage.getItem("token");
     if (
       error.response.message === "Expired JWT Token" &&

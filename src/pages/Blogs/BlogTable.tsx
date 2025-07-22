@@ -32,7 +32,7 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
 
   const { data = [], isLoading, isError } = useQuery("AllFaqs", fetchFaqs);
   const blogs = data?.result || [];
-  console.log("data", blogs);
+  // console.log("data", blogs);
   const { mutate: deleteFaqById } = useMutation(deleteFaq, {
     onSuccess: () => {
       message.success("Blog deleted successfully.");
@@ -175,7 +175,7 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
                               okText: "Delete",
                               cancelText: "Cancel",
                               onOk: () => deleteFaqById(item._id),
-                              onCancel: () => console.log("Cancelled"),
+                              // onCancel: () => console.log("Cancelled"),
                               okButtonProps: { className: "orange-button" },
                             })
                           }

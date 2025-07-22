@@ -47,9 +47,9 @@ const AddProject = () => {
 
       if (logoFile) {
         formData.append("logo", logoFile);
-        console.log("✅ Logo file added:", logoFile);
+        // console.log("✅ Logo file added:", logoFile);
       } else {
-        console.log("❌ No logo file selected");
+        // console.log("❌ No logo file selected");
       }
 
       if (videoFile) {
@@ -67,10 +67,10 @@ const AddProject = () => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        onUploadProgress: (e: any) => {
-          const percent = Math.round((e.loaded * 100) / (e.total || 1));
-          console.log("Upload Progress:", percent + "%");
-        },
+        // onUploadProgress: (e: any) => {
+        //   // const percent = Math.round((e.loaded * 100) / (e.total || 1));
+        //   // console.log("Upload Progress:", percent + "%");
+        // },
       });
 
       return response.data;
@@ -172,9 +172,9 @@ const AddProject = () => {
     </div>
   );
   const handleLogoChange = (info: any) => {
-    console.log("handleLogoChange:", info); // Add this line
+    // console.log("handleLogoChange:", info); // Add this line
     if (info.file.status !== "removed") {
-      console.log("Logo file set:", info.file);
+      // console.log("Logo file set:", info.file);
       setLogoFile(info.file);
     } else {
       setLogoFile(null);
@@ -198,7 +198,7 @@ const AddProject = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
             <button className="BackNavigation" onClick={() => navigate(-1)}>
-              <img src="/Images/Project/back.svg" alt="Back" />
+              <img src="/Images/Project/back.svg" alt="Back"  className="BackArrow"/>
               Back
             </button>
             <div style={{ display: "flex", gap: "8px" }}>

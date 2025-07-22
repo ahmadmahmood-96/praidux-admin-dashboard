@@ -46,14 +46,12 @@
   border-radius: 12px;
 }
 .video-testimonila-bottoms {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  gap: 16px; 
+  grid-template-columns: repeat(2, 1fr);
 }
 .videotestCard {
-  max-width: 729px;
+  /* max-width: 729px; */
   width: 100%;
   gap: 16px;
   padding: 16px;
@@ -130,6 +128,7 @@
 }
 .video-card-bottom-div-testimonial {
   display: flex;
+  flex-wrap: wrap;
   gap: 18px;
   align-items: center;
 }
@@ -166,6 +165,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  white-space: nowrap;
 }
 .livee {
   width: 9px;
@@ -187,6 +187,19 @@
 .video-test-bottom-part-card{
   display: flex;
   gap: 16px;
+}
+@media (min-width: 1970px) {
+  .video-testimonila-bottoms {
+    grid-template-columns: repeat(3, 1fr); /* 3 cards per row above 1500px */
+  }
+}
+@media(max-width:1260px){
+  .video-test-bottom-part-card{
+    flex-direction: column;
+  }
+  .video-section{
+    max-width: 100%;
+  }
 }
 @media (max-width: 1130px) {
   .Add-testimonial-button {
@@ -237,9 +250,24 @@
     right: 93%;
 }
 }
+@media (max-width: 900px) {
+  .video-testimonila-bottoms {
+    grid-template-columns: 1fr; 
+  }
+   .video-test-bottom-part-card{
+    flex-direction: row;
+  }
+  .video-section{
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 760px) {
   .video-section {
     height: 280.00714111328125px;
+  }
+   .video-test-bottom-part-card{
+    flex-direction: column;
   }
 }
 @media (max-width: 560px) {
