@@ -1,0 +1,8 @@
+/* Customize the spin dot color */
+.custom-spin .ant-spin-dot-item {
+  background-color: rgb(255, 95, 31) !important;
+}
+/* Most specific targeting with !important */
+.ant-spin-dot .ant-spin-dot-item {
+  background-color: rgb(255, 95, 31) !important;
+}

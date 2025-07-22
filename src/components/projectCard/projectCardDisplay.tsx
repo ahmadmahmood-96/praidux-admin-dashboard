@@ -1,5 +1,10 @@
 
 import { Dropdown, Menu } from "antd";
+import {
+  EditOutlined,
+  PauseCircleOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import "./ProjectCard.css";
 
 const ProjectCard = ({
@@ -40,19 +45,28 @@ const ProjectCard = ({
     return `category-tag ${group}-tag`; // returns e.g. "category-tag design-tag"
   };
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="edit" onClick={onEdit}>
+ const menu = (
+  <Menu>
+    <Menu.Item key="edit" onClick={onEdit}>
+      <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <EditOutlined />
         Edit
-      </Menu.Item>
-      <Menu.Item key="pause" onClick={onPause}>
+      </span>
+    </Menu.Item>
+    <Menu.Item key="pause" onClick={onPause}>
+      <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <PauseCircleOutlined />
         Pause
-      </Menu.Item>
-      <Menu.Item key="delete" onClick={onDelete}>
+      </span>
+    </Menu.Item>
+    <Menu.Item key="delete" onClick={onDelete}>
+      <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <DeleteOutlined />
         Delete
-      </Menu.Item>
-    </Menu>
-  );
+      </span>
+    </Menu.Item>
+  </Menu>
+);
 
   return (
     <div className="ProjectCardDisplay">

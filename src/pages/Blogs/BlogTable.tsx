@@ -8,6 +8,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Dropdown, Menu, message } from "antd";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import client from "../../utils/axios";
@@ -56,7 +57,7 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
     currentPage * pageSize
   );
 
-    const getVisiblePages = (totalPages: number, currentPage: number) => {
+  const getVisiblePages = (totalPages: number, currentPage: number) => {
     const pages: (number | "...")[] = [];
 
     if (totalPages <= 3) {
@@ -88,9 +89,7 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
     return [...new Set(pages)];
   };
 
-  if (isLoading) return  <LoadingSpinner
-          isLoading={true}
-        />;
+  if (isLoading) return <LoadingSpinner isLoading={true} />;
   if (isError) return <p>Something went wrong while loading FAQs</p>;
   const stripHtml = (html: string) =>
     html.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ");
@@ -163,7 +162,16 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
                         <Menu.Item
                           onClick={() => navigate(`/add-Blog/${item._id}`)}
                         >
-                          Edit
+                          <span
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            <EditOutlined />
+                            Edit
+                          </span>
                         </Menu.Item>
                         <Menu.Item
                           onClick={() =>
@@ -180,7 +188,16 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
                             })
                           }
                         >
-                          Delete
+                          <span
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            <DeleteOutlined />
+                            Delete
+                          </span>
                         </Menu.Item>
                       </Menu>
                     }
@@ -228,23 +245,30 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
 
         <div style={{ display: "flex", gap: "4px" }}>
           {" "}
-         {getVisiblePages(totalPages, currentPage).map((page, idx) =>
+          {getVisiblePages(totalPages, currentPage).map((page, idx) =>
             page === "..." ? (
-              <span key={`dots-${idx}`} style={{ padding: "0 4px" }}
-               className={`page-button ${
-                  typeof page === "number" && page === currentPage ? "active" : ""
-                }`}>
+              <span
+                key={`dots-${idx}`}
+                style={{ padding: "0 4px" }}
+                className={`page-button ${
+                  typeof page === "number" && page === currentPage
+                    ? "active"
+                    : ""
+                }`}
+              >
                 ...
               </span>
             ) : (
               <button
                 key={`page-${page}`}
-                 className={`page-button ${page === currentPage ? "active" : ""}`}
+                className={`page-button ${
+                  page === currentPage ? "active" : ""
+                }`}
                 onClick={() => setCurrentPage(Number(page))}
                 style={{
                   minWidth: "24px",
                   height: "24px",
-                  border:  "none",
+                  border: "none",
                   borderRadius: "4px",
                   background: "none",
                   fontWeight: page === currentPage ? "600" : "400",
@@ -271,7 +295,11 @@ const BlogTable = ({ searchQuery }: { searchQuery: string }) => {
           onClick={() => setCurrentPage((prev) => prev + 1)}
         >
           Next
-          <img className="arrowRight" src="/Images/arrow-right.svg" alt="left" />
+          <img
+            className="arrowRight"
+            src="/Images/arrow-right.svg"
+            alt="left"
+          />
         </button>
       </Box>
     </div>

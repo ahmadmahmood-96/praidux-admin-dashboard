@@ -1,6 +1,11 @@
 import "./videoTestimonial.css";
 import { Dropdown, Menu } from "antd";
 import { useState } from "react";
+import {
+  EditOutlined,
+  PauseCircleOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 interface VideoTestCardProps {
   testimonial: {
     clientName: string;
@@ -18,48 +23,58 @@ interface VideoTestCardProps {
   };
   checked: boolean;
   onToggleCheck: () => void;
- onAction: (id: string, action: "edit" | "pause" | "delete") => void;
-
+  onAction: (id: string, action: "edit" | "pause" | "delete") => void;
 }
 
 const VideoTestCard = ({
   testimonial,
   checked,
   onToggleCheck,
-  onAction
+  onAction,
 }: VideoTestCardProps) => {
-   const [showVideo, setShowVideo] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
   const {
     clientName,
     // designation,
     projectName,
     stars,
     description,
-     thumbnailUrl, 
+    thumbnailUrl,
     // websiteLink,
     // iosLink,
     // androidLink,
     liveStatus,
     videoUrl,
   } = testimonial;
-   const handlePlayClick = () => {
+  const handlePlayClick = () => {
     setShowVideo(true);
   };
 
-const menu = (
-  <Menu>
-    <Menu.Item key="edit" onClick={() => onAction(testimonial._id, "edit")}>
-      Edit
-    </Menu.Item>
-    <Menu.Item key="pause" onClick={() => onAction(testimonial._id, "pause")}>
-      Pause
-    </Menu.Item>
-    <Menu.Item key="delete" onClick={() => onAction(testimonial._id, "delete")}>
-      Delete
-    </Menu.Item>
-  </Menu>
-);
-
+  const menu = (
+    <Menu>
+      <Menu.Item key="edit" onClick={() => onAction(testimonial._id, "edit")}>
+        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <EditOutlined />
+          Edit
+        </span>
+      </Menu.Item>
+      <Menu.Item key="pause" onClick={() => onAction(testimonial._id, "pause")}>
+        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <PauseCircleOutlined />
+          Pause
+        </span>
+      </Menu.Item>
+      <Menu.Item
+        key="delete"
+        onClick={() => onAction(testimonial._id, "delete")}
+      >
+        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <DeleteOutlined />
+          Delete
+        </span>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <div className="videotestCard">
@@ -79,35 +94,35 @@ const menu = (
 
       <div className="video-test-bottom-part-card">
         <div className="video-section">
-         
           {videoUrl && (
             <>
               {/* Thumbnail with play button (shown by default) */}
               {!showVideo && (
-                <div 
+                <div
                   className="video-thumbnail-container"
                   onClick={handlePlayClick}
                   style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    cursor: 'pointer',
-                    background: thumbnailUrl ? `url(${thumbnailUrl}) center/cover` : '#ff5f1f'
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                    cursor: "pointer",
+                    background: thumbnailUrl
+                      ? `url(${thumbnailUrl}) center/cover`
+                      : "#ff5f1f",
                   }}
                 >
-                  <div className="video-play-button"  style={{width:"64px"}}>
-                    <img src="/Images/play.svg" alt="play"/>
-                  
+                  <div className="video-play-button" style={{ width: "64px" }}>
+                    <img src="/Images/play.svg" alt="play" />
                   </div>
                 </div>
               )}
-              
+
               {/* Video element (shown after click) */}
               {showVideo && (
-                <video 
-                  src={videoUrl} 
-                  controls 
-                  width="100%" 
+                <video
+                  src={videoUrl}
+                  controls
+                  width="100%"
                   height="100%"
                   autoPlay
                 />

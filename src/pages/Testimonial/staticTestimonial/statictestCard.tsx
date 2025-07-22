@@ -1,6 +1,10 @@
 import "./staticTestimonial.css";
 import { Dropdown, Menu } from "antd";
-
+import {
+  EditOutlined,
+  PauseCircleOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 interface StaticTestimonialData {
   _id: string;
   projectLogo?: string;
@@ -28,13 +32,22 @@ const StaticTestimonialCard: React.FC<StaticTestimonialCardProps> = ({
   const menu = (
     <Menu>
       <Menu.Item key="edit" onClick={() => onAction(data._id, "edit")}>
-        Edit
+        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <EditOutlined />
+          Edit
+        </span>
       </Menu.Item>
       <Menu.Item key="pause" onClick={() => onAction(data._id, "pause")}>
-        Pause
+        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <PauseCircleOutlined />
+          Pause
+        </span>
       </Menu.Item>
       <Menu.Item key="delete" onClick={() => onAction(data._id, "delete")}>
-        Delete
+        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <DeleteOutlined />
+          Delete
+        </span>
       </Menu.Item>
     </Menu>
   );
@@ -56,33 +69,30 @@ const StaticTestimonialCard: React.FC<StaticTestimonialCardProps> = ({
       </div>
 
       <div className="static-testimonial-body">
-        
-        
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <p className="project-logo-static">Project Logo</p>
-              <Dropdown overlay={menu} trigger={["click"]}>
-                <img
-                  style={{ cursor: "pointer" }}
-                  src="/Images/testimonial/moreInfo.svg"
-                  alt="info"
-                />
-              </Dropdown>
-            </div>
-{data.projectLogo && (
-            <div className="project-logo-image-static">
-              <img
-                src={data.projectLogo}
-                alt="Project Logo"
-                style={{ width: "100%", borderRadius: "8px", height: "100%" }}
-              />
-            </div>
-         
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <p className="project-logo-static">Project Logo</p>
+          <Dropdown overlay={menu} trigger={["click"]}>
+            <img
+              style={{ cursor: "pointer" }}
+              src="/Images/testimonial/moreInfo.svg"
+              alt="info"
+            />
+          </Dropdown>
+        </div>
+        {data.projectLogo && (
+          <div className="project-logo-image-static">
+            <img
+              src={data.projectLogo}
+              alt="Project Logo"
+              style={{ width: "100%", borderRadius: "8px", height: "100%" }}
+            />
+          </div>
         )}
 
         <p className="statuc-testimonial-description">{data.description}</p>
