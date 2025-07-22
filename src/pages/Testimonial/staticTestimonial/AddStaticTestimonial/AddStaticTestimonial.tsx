@@ -24,10 +24,10 @@ const AddStaticTestimonial = () => {
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string>("");
   const [clientImagePreviewUrl, setClientImagePreviewUrl] =
     useState<string>("");
-  console.log(clientImagePreviewUrl);
-  console.log(logoPreviewUrl);
+  // console.log(clientImagePreviewUrl);
+  // console.log(logoPreviewUrl);
   const handleLogoChange = (info: UploadChangeParam<UploadFile<any>>) => {
-    console.log("Selected file:", info.file);
+    // console.log("Selected file:", info.file);
     setLogoFile(info.file);
     if (info.file.originFileObj) {
       setLogoPreviewUrl(URL.createObjectURL(info.file.originFileObj));
@@ -133,7 +133,7 @@ const AddStaticTestimonial = () => {
           {/* Back navigation */}
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
             <button className="BackNavigation" onClick={() => navigate(-1)}>
-              <img src="/Images/Project/back.svg" alt="Back" />
+              <img src="/Images/Project/back.svg" alt="Back" className="BackArrow" />
               Back
             </button>
             <div style={{ display: "flex", gap: "8px" }}>

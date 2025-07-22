@@ -349,7 +349,7 @@ const UpdateProject = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
             <button className="BackNavigation" onClick={() => navigate(-1)}>
-              <img src="/Images/Project/back.svg" alt="Back" />
+              <img src="/Images/Project/back.svg" alt="Back" className="BackArrow"/>
               Back
             </button>
             <div style={{ display: "flex", gap: "8px" }}>

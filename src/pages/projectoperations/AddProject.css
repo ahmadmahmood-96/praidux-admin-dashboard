@@ -33,6 +33,10 @@
   gap: 5.8px;
   cursor: pointer;
 }
+.BackArrow{
+  height: 20px;
+  width: 20px;
+}
 .ProjectNavigationhead {
   font-family: DMSans;
   font-weight: 500;

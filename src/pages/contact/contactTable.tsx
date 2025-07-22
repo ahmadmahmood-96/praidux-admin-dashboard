@@ -14,8 +14,8 @@ import "./contact.css";
 
 const fetchContact = async () => {
   const response = await client.get("/contact/view-all");
-  console.log("Raw response from API:", response.data);
-  return response.data.contacts; // or response.data.contact depending on structure
+  // console.log("Raw response from API:", response.data);
+  return response.data.contacts; 
 };
 
 // const deleteFaq = async (id: string) => {
@@ -31,7 +31,7 @@ const ContactTable = ({ searchQuery }: { searchQuery: string }) => {
     isLoading,
     isError,
   } = useQuery("AllContacts", fetchContact);
-  console.log("Fetched contact data:", data);
+  // console.log("Fetched contact data:", data);
 
   //   const { mutate: deleteFaqById } = useMutation(deleteFaq, {
   //     onSuccess: () => {

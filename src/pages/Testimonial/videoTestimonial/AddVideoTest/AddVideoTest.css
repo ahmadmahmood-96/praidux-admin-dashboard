@@ -45,6 +45,10 @@ line-height: 24px;
 letter-spacing: 0%;
 color: #344054;
 }
+.BackArrow{
+  height: 20px;
+  width: 20px;
+}
 .client-naMe-Input::placeholder{
     color: #667085;
 }

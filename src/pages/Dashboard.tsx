@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   const fetchProjects = async () => {
     const { data } = await client.get("/project/view-projects");
-    console.log("result of Project", data.result);
+    // console.log("result of Project", data.result);
     return data.result;
   };
 
@@ -49,7 +49,7 @@ const Dashboard = () => {
               client.delete(`/project/delete-project/${projectId}`)
             )
           );
-          console.log("Deleted:", idsToDelete);
+          // console.log("Deleted:", idsToDelete);
           setSelectedIds([]);
           await queryClient.invalidateQueries("AllProjects");
         } catch (error) {
@@ -57,10 +57,10 @@ const Dashboard = () => {
         }
       },
       onCancel: () => {
-        console.log("Delete cancelled");
+        // console.log("Delete cancelled");
       },
       okButtonProps: {
-        className: "orange-button", // 👈 Add your class here
+        className: "orange-button", 
       },
     });
   };

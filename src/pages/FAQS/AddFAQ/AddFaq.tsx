@@ -51,7 +51,7 @@ const AddFaq = () => {
       <div className="AddFaqContainer">
         <div className="Add-Faq-Header">
           <button className="BackNavigation" onClick={() => navigate(-1)}>
-            <img src="/Images/Project/back.svg" alt="Back" />
+            <img src="/Images/Project/back.svg" alt="Back" className="BackArrow" />
             Back
           </button>
           <div style={{ display: "flex", gap: "8px" }}>

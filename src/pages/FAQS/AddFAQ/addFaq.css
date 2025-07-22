@@ -86,3 +86,7 @@ width: fit-content;
 .Add-faq-button:hover{
     opacity: 0.8;
 }
+.BackArrow{
+  height: 20px;
+  width: 20px;
+}
