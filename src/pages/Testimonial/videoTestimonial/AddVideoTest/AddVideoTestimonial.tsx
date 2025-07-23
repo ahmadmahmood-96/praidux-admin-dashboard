@@ -270,16 +270,27 @@ const AddVideoTestimonial = () => {
                     beforeUpload={() => false}
                   >
                     {!logoFile && videoUrl && (
+                      <div  style={{
+                          width: "200px",
+                          height: "150px",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          border: "1px dashed #ccc",
+                          position: "relative",
+                          marginBottom:"10px",
+                        }}>
                       <video
                         src={videoUrl}
                         controls
                         width="100%"
                         style={{
-                          maxWidth: "300px",
+                          maxWidth: "100%",
+                          height:"100%",
                           borderRadius: "8px",
                           backgroundColor: "#000",
                         }}
                       />
+                      </div>
                     )}
 
                     <button className="Upload-button-reuable">

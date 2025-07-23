@@ -315,6 +315,7 @@ const headerCellStyle = {
   fontWeight: "600",
   color: "#818181",
   borderBottom: "1px solid #EAECF0",
+  whiteSpace:"nowrap",
 };
 
 const rowCellStyle = {

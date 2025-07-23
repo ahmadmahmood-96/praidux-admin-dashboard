@@ -349,7 +349,11 @@ const UpdateProject = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
             <button className="BackNavigation" onClick={() => navigate(-1)}>
-              <img src="/Images/Project/back.svg" alt="Back" className="BackArrow"/>
+              <img
+                src="/Images/Project/back.svg"
+                alt="Back"
+                className="BackArrow"
+              />
               Back
             </button>
             <div style={{ display: "flex", gap: "8px" }}>
@@ -520,21 +524,53 @@ const UpdateProject = () => {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "8px",
+                        gap: "12px",
+                        marginTop: "8px",
                       }}
                     >
-                      <p className="selectedFileName">{logoFile.name}</p>
-                      <span
+                      <div
                         style={{
-                          cursor: "pointer",
-                          color: "#344054",
-                          fontWeight: "bold",
-                          fontSize: "16px",
+                          width: "100px",
+                          height: "100px",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          border: "1px dashed #ccc",
+                          position: "relative",
                         }}
-                        onClick={() => setLogoFile(null)}
                       >
-                        ×
-                      </span>
+                        <img
+                          src={
+                            logoFile.originFileObj
+                              ? URL.createObjectURL(logoFile.originFileObj)
+                              : logoFile.url
+                          }
+                          alt="Project Logo"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <span
+                          onClick={() => setLogoFile(null)}
+                          style={{
+                            position: "absolute",
+                            top: "4px",
+                            right: "6px",
+                            background: "#fff",
+                            borderRadius: "50%",
+                            width: "20px",
+                            height: "20px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontWeight: "bold",
+                            cursor: "pointer",
+                          }}
+                        >
+                          ×
+                        </span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -556,7 +592,14 @@ const UpdateProject = () => {
                     showUploadList={false}
                     onChange={handleVideoChange}
                     fileList={videoFile ? [videoFile] : []}
-                    beforeUpload={() => false}
+                    beforeUpload={(file) => {
+                      const isUnder20MB = file.size / 1024 / 1024 < 20;
+                      if (!isUnder20MB) {
+                        message.error("Video must be smaller than 20MB!");
+                        return Upload.LIST_IGNORE; // ✅ Prevent file from being added
+                      }
+                      return false; // ✅ Prevent auto-upload
+                    }}
                   >
                     <button className="Upload-button-reuable">
                       <img
@@ -573,21 +616,53 @@ const UpdateProject = () => {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "8px",
+                        gap: "12px",
+                        marginTop: "8px",
                       }}
                     >
-                      <p className="selectedFileName">{videoFile.name}</p>
-                      <span
+                      <div
                         style={{
-                          cursor: "pointer",
-                          color: "#344054",
-                          fontWeight: "bold",
-                          fontSize: "16px",
+                          width: "200px",
+                          height: "150px",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          border: "1px dashed #ccc",
+                          position: "relative",
                         }}
-                        onClick={() => setVideoFile(null)}
                       >
-                        ×
-                      </span>
+                        <video
+                          src={
+                            videoFile.originFileObj
+                              ? URL.createObjectURL(videoFile.originFileObj)
+                              : videoFile.url
+                          }
+                          controls
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <span
+                          onClick={() => setVideoFile(null)}
+                          style={{
+                            position: "absolute",
+                            top: "4px",
+                            right: "6px",
+                            background: "#fff",
+                            borderRadius: "50%",
+                            width: "20px",
+                            height: "20px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontWeight: "bold",
+                            cursor: "pointer",
+                          }}
+                        >
+                          ×
+                        </span>
+                      </div>
                     </div>
                   )}
                 </div>
