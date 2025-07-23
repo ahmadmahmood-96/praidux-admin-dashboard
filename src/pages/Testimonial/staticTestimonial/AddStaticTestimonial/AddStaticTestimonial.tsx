@@ -133,7 +133,11 @@ const AddStaticTestimonial = () => {
           {/* Back navigation */}
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
             <button className="BackNavigation" onClick={() => navigate(-1)}>
-              <img src="/Images/Project/back.svg" alt="Back" className="BackArrow" />
+              <img
+                src="/Images/Project/back.svg"
+                alt="Back"
+                className="BackArrow"
+              />
               Back
             </button>
             <div style={{ display: "flex", gap: "8px" }}>
@@ -220,7 +224,7 @@ const AddStaticTestimonial = () => {
                       return false; // Prevent auto-upload
                     }}
                   >
-                      {!clientImageFile && logoPreviewUrl && (
+                    {!clientImageFile && logoPreviewUrl && (
                       <img
                         src={
                           logoFile?.originFileObj
@@ -233,6 +237,7 @@ const AddStaticTestimonial = () => {
                           height: "100px",
                           objectFit: "cover",
                           borderRadius: "8px",
+                          border: "1px dashed #ccc",
                         }}
                       />
                     )}
@@ -274,6 +279,7 @@ const AddStaticTestimonial = () => {
                               height: "100px",
                               objectFit: "cover",
                               borderRadius: "8px",
+                              border: "1px dashed #ccc",
                             }}
                           />
                         )}
@@ -350,6 +356,7 @@ const AddStaticTestimonial = () => {
                           height: "100px",
                           objectFit: "cover",
                           borderRadius: "8px",
+                          border: "1px dashed #ccc",
                         }}
                       />
                     )}

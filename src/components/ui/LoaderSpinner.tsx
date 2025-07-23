@@ -1,5 +1,5 @@
 import { Spin } from "antd";
-
+import "./spinner.css"
 interface SpinnerProps {
   isLoading: boolean;
   className?: string;
@@ -10,7 +10,9 @@ const LoadingSpinner: React.FC<SpinnerProps> = ({
   className = "",
 }) => {
   return (
-    <Spin className={isLoading ? `app-loading-wrapper ${className}` : "hide"} />
+    <Spin
+      className={`custom-spin ${isLoading ? `app-loading-wrapper ${className}` : "hide"}`}
+    />
   );
 };
 

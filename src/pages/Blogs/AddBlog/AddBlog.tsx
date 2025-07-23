@@ -274,16 +274,31 @@ const AddBlog = () => {
                     }}
                   >
                     {!blogImageFile && blogImageUrl && (
+                        <div
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          border: "1px dashed #ccc",
+                          position: "relative",
+                          marginBottom:"10px"
+                        }}
+                      >
+                        
+                     
                       <img
                         src={blogImageUrl}
                         alt="Blog"
                         width="100%"
                         style={{
-                          maxWidth: "300px",
+                          width: "100%",
+                          height:"100%",
                           borderRadius: "8px",
                           backgroundColor: "#f2f2f2",
                         }}
                       />
+                       </div>
                     )}
 
                     <button className="Upload-button-reuable">

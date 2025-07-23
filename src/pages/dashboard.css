@@ -96,8 +96,8 @@
 .Add-projectbutton{
     white-space: nowrap;
 height: 45px;
-padding-right: 24px;
-padding-left: 24px;
+padding-right: 14px;
+padding-left: 14px;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -107,7 +107,7 @@ border: none;
 font-family: Albert Sans;
 font-weight: 400;
 font-style: ☞;
-font-size: 14px;
+font-size: 16px;
 leading-trim: NONE;
 line-height: 100%;
 letter-spacing: 0%;

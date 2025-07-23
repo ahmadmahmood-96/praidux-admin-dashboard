@@ -13,6 +13,10 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import client from "../../utils/axios";
 import { ConfirmModal } from "../../components/ui/index.tsx";
 import { useNavigate } from "react-router-dom";
+import {
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import "./faq.css";
 
 const fetchFaqs = async () => {
@@ -147,7 +151,16 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
                         <Menu.Item
                           onClick={() => navigate(`/update-faq/${item._id}`)}
                         >
-                          Edit
+                          <span
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            <EditOutlined />
+                            Edit
+                          </span>
                         </Menu.Item>
                         <Menu.Item
                           onClick={() =>
@@ -164,7 +177,16 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
                             })
                           }
                         >
-                          Delete
+                          <span
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            <DeleteOutlined />
+                            Delete
+                          </span>
                         </Menu.Item>
                       </Menu>
                     }
@@ -222,10 +244,14 @@ const FaqTable = ({ searchQuery }: { searchQuery: string }) => {
           {getVisiblePages(totalPages, currentPage).map((page, idx) =>
             page === "..." ? (
               <span
-               className={`page-button ${
-                  typeof page === "number" && page === currentPage ? "active" : ""
+                className={`page-button ${
+                  typeof page === "number" && page === currentPage
+                    ? "active"
+                    : ""
                 }`}
-                 key={`dots-${idx}`} style={{ padding: "0 4px" }}>
+                key={`dots-${idx}`}
+                style={{ padding: "0 4px" }}
+              >
                 ...
               </span>
             ) : (
