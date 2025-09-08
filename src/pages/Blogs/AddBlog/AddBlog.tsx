@@ -237,10 +237,10 @@ const handleMediaChange = (file: any, index: number) => {
             setFileLists(initialFileLists);
           }
         })
-        .catch((err) => {
-          // console.error("Failed to fetch blog", err);
-          message.error("Failed to load blog data");
-        });
+       .catch(() => {
+  message.error("Failed to load blog data");
+});
+
     }
   }, [id]);
 
