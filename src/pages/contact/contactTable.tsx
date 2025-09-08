@@ -100,12 +100,12 @@ const ContactTable = ({ searchQuery }: { searchQuery: string }) => {
         background: "#fff",
         borderRadius: "8px",
         border: "1px solid #EAECF0",
-        boxShadow: "0 0 10px rgba(0,0,0,0.05)", // ✅ ADD shadow here only
+        boxShadow: "0 0 10px rgba(0,0,0,0.05)",
       }}
     >
       <TableContainer
         sx={{
-          borderBottom: "1px solid #EAECF0", // ✅ No full border
+          borderBottom: "1px solid #EAECF0",
           borderTopLeftRadius: "8px",
           borderTopRightRadius: "8px",
           borderBottomLeftRadius: "0px",

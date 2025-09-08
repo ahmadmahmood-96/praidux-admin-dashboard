@@ -13,7 +13,8 @@ import {
   ListItemText,
 } from "@mui/material";
 import client from "../../../utils/axios";
-import QuillTextEditor from "../../../components/quillEditor";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const AddBlog = () => {
   const navigate = useNavigate();
@@ -27,6 +28,65 @@ const AddBlog = () => {
   const [blogTitle, setBlogTitle] = useState("");
   const [blogImageFile, setBlogImageFile] = useState<any>(null);
   const [blogImageUrl, setBlogImageUrl] = useState("");
+  const [fileLists, setFileLists] = useState<{ [key: number]: UploadFile[] }>(
+    {}
+  );
+
+  type ContentBlock = {
+    media: File | null;
+    text: string;
+    mediaUrl?: string | null;
+    mediaType?: string | null; // "image" | "video"
+  };
+
+  const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>([
+    { media: null, text: "" },
+  ]);
+ // Handle media change
+const handleMediaChange = (file: any, index: number) => {
+  const updated = [...contentBlocks];
+
+  if (file instanceof File) {
+    updated[index].media = file;
+  } else if (file.originFileObj instanceof File) {
+    updated[index].media = file.originFileObj;
+  } else {
+    console.warn("⚠️ No valid file found", file);
+  }
+
+  setContentBlocks(updated);
+
+  // ✅ update Upload's fileList so AntD tracks it
+  setFileLists((prev) => ({
+    ...prev,
+    [index]: [
+      {
+        uid: `${Date.now()}`,
+        name: file.name || `media-${index}`,
+        status: "done",
+        url: updated[index].media ? URL.createObjectURL(updated[index].media) : updated[index].mediaUrl,
+      } as UploadFile,
+    ],
+  }));
+};
+
+
+  // Handle text change
+  const handleTextChange = (value: string, index: number) => {
+    const updated = [...contentBlocks];
+    updated[index].text = value;
+    setContentBlocks(updated);
+  };
+
+  // Add new content block
+  const addContentBlock = () => {
+    setContentBlocks([...contentBlocks, { media: null, text: "" }]);
+  };
+
+  // Remove content block
+  const removeContentBlock = (index: number) => {
+    setContentBlocks(contentBlocks.filter((_, i) => i !== index));
+  };
 
   const categoryOptions = [
     "UIUX",
@@ -51,19 +111,19 @@ const AddBlog = () => {
       return;
     }
 
-    if (
-      !blogContent ||
-      blogContent.trim() === "" ||
-      blogContent === "<p><br></p>"
-    ) {
-      message.warning("Please enter the blog content");
-      return;
-    }
-
     if (!blogImageFile && !blogImageUrl) {
       message.warning("Please upload a blog image");
       return;
     }
+    const hasValidBlock = contentBlocks.some(
+    (block) =>
+      (block.media || block.mediaUrl) && block.text && block.text.trim() !== ""
+  );
+
+  if (!hasValidBlock) {
+    message.warning("Please add at least one content block with media and text");
+    return;
+  }
 
     setIsSubmitting(true);
     try {
@@ -71,9 +131,29 @@ const AddBlog = () => {
       formData.append("writerName", writerName);
       formData.append("blogTitle", blogTitle);
       formData.append("categories", JSON.stringify(categories));
-      formData.append("blogContent", blogContent);
       formData.append("listOnWebsite", shouldList.toString());
-      if (blogImageFile) formData.append("blogImage", blogImageFile);
+
+      // Main blog image
+      if (blogImageFile) {
+        formData.append("blogImage", blogImageFile);
+      }
+
+      // ✅ Build blocks array
+      const blocks = contentBlocks.map((block, index) => {
+        if (block.media) {
+          const tempKey = `blockMedia_${index}`;
+          formData.append(tempKey, block.media); // upload actual file
+          return {
+            tempFileKey: tempKey, // backend will map this file
+            text: block.text || "",
+          };
+        }
+        return { text: block.text || "" };
+      });
+
+      // ✅ Send JSON string for backend
+      formData.append("contentBlocks", JSON.stringify(blocks));
+      formData.append("blogContent", blogContent);
 
       if (isEditMode) {
         await client.put(`/blog/update-blog/${id}`, formData);
@@ -90,12 +170,25 @@ const AddBlog = () => {
         "Something went wrong while submitting the blog";
       message.error(msg);
     } finally {
-      setIsSubmitting(false); // Stop loader
+      setIsSubmitting(false);
     }
   };
 
   const handleImageChange = (info: UploadChangeParam<UploadFile<any>>) => {
-    setBlogImageFile(info.file);
+    const latestFile = info.fileList[info.fileList.length - 1];
+
+    if (latestFile) {
+      // some AntD versions keep the File here:
+      const file = latestFile.originFileObj || (latestFile as unknown as File);
+
+      if (file instanceof File) {
+        setBlogImageFile(file);
+        setBlogImageUrl("");
+        // console.log("✅ Selected Blog Image:", file);
+      } else {
+        // console.warn("⚠️ No File found in Upload event:", latestFile);
+      }
+    }
   };
 
   useEffect(() => {
@@ -104,19 +197,55 @@ const AddBlog = () => {
         .get(`/blog/view-blog/${id}`)
         .then((res) => {
           const data = res.data.result;
+          // console.log("Fetched blog data:", data);
+
           setWriterName(data.writerName || "");
           setBlogTitle(data.blogTitle || "");
           setCategories(data.categories || []);
           setShouldList(data.listOnWebsite);
-          setBlogContent(data.blogContent || "");
           setBlogImageUrl(data.blogImageUrl || "");
+          setBlogContent(data.blogContent || "");
+
+          if (
+            Array.isArray(data.contentBlocks) &&
+            data.contentBlocks.length > 0
+          ) {
+            // ✅ Populate contentBlocks
+            setContentBlocks(
+              data.contentBlocks.map((block: any) => ({
+                text: block.text || "",
+                mediaUrl: block.mediaUrl || null,
+                mediaType: block.mediaType || null,
+                media: null, // fresh upload will overwrite this
+              }))
+            );
+
+            // ✅ Populate Upload fileLists (for previews)
+            const initialFileLists: { [key: number]: UploadFile[] } = {};
+            data.contentBlocks.forEach((block: any, idx: number) => {
+              if (block.mediaUrl) {
+                initialFileLists[idx] = [
+                  {
+                    uid: `-${idx}`,
+                    name: `media-${idx}`,
+                    status: "done",
+                    url: block.mediaUrl, // 👈 show existing file
+                  } as UploadFile,
+                ];
+              }
+            });
+            setFileLists(initialFileLists);
+          }
         })
         .catch((err) => {
-          console.error("Failed to fetch blog", err);
+          // console.error("Failed to fetch blog", err);
           message.error("Failed to load blog data");
         });
     }
   }, [id]);
+
+  // console.log("blogImageFile:", blogImageFile);
+  // console.log("blogImageUrl:", blogImageUrl);
 
   return (
     <>
@@ -127,7 +256,11 @@ const AddBlog = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
             <button className="BackNavigation" onClick={() => navigate(-1)}>
-              <img src="/Images/Project/back.svg" alt="Back" className="BackArrow" />
+              <img
+                src="/Images/Project/back.svg"
+                alt="Back"
+                className="BackArrow"
+              />
               Back
             </button>
             <div style={{ display: "flex", gap: "8px" }}>
@@ -248,86 +381,81 @@ const AddBlog = () => {
                 <div
                   style={{
                     display: "flex",
-                    alignItems: "center",
+
                     gap: "16px",
                     flexWrap: "wrap",
                   }}
                 >
                   <Upload
+                    accept="image/*"
                     showUploadList={false}
+                    beforeUpload={() => false} // <--- required!
                     onChange={handleImageChange}
-                    fileList={blogImageFile ? [blogImageFile] : []}
-                    beforeUpload={(file) => {
-                      const isAllowedType = [
-                        "image/jpeg",
-                        "image/png",
-                        "image/gif",
-                        "image/webp",
-                      ].includes(file.type);
-                      if (!isAllowedType) {
-                        message.error(
-                          "Only JPG, PNG, GIF, and WEBP images are allowed"
-                        );
-                        return Upload.LIST_IGNORE; // Prevent file from being added
-                      }
-                      return false; // Prevent auto-upload
-                    }}
                   >
-                    {!blogImageFile && blogImageUrl && (
-                        <div
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          borderRadius: "8px",
-                          overflow: "hidden",
-                          border: "1px dashed #ccc",
-                          position: "relative",
-                          marginBottom:"10px"
-                        }}
-                      >
-                        
-                     
-                      <img
-                        src={blogImageUrl}
-                        alt="Blog"
-                        width="100%"
-                        style={{
-                          width: "100%",
-                          height:"100%",
-                          borderRadius: "8px",
-                          backgroundColor: "#f2f2f2",
-                        }}
-                      />
-                       </div>
-                    )}
-
                     <button className="Upload-button-reuable">
                       <img
-                        style={{ width: "24px", height: "24px" }}
                         src="/Images/Project/Cloud-Upload.svg"
                         alt="upload"
+                        width={24}
+                        height={24}
                       />
                       Upload
                     </button>
                   </Upload>
 
-                  {blogImageFile && (
+                  {(blogImageFile || blogImageUrl) && (
                     <div
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
+                        position: "relative",
+                        width: "120px",
+                        height: "120px",
+                        border: "1px dashed #ccc",
+                        borderRadius: "8px",
+                        overflow: "hidden",
                       }}
                     >
-                      <p className="selectedFileName">{blogImageFile.name}</p>
+                      {blogImageFile ? (
+                        <img
+                          src={URL.createObjectURL(blogImageFile)}
+                          alt="Blog Preview"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src={blogImageUrl}
+                          alt="Blog"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      )}
+
+                      {/* ❌ Close Button */}
                       <span
-                        style={{
-                          cursor: "pointer",
-                          color: "#344054",
-                          fontWeight: "bold",
-                          fontSize: "16px",
+                        onClick={() => {
+                          setBlogImageFile(null);
+                          setBlogImageUrl("");
                         }}
-                        onClick={() => setBlogImageFile(null)}
+                        style={{
+                          position: "absolute",
+                          top: "4px",
+                          right: "6px",
+                          background: "#fff",
+                          borderRadius: "50%",
+                          width: "20px",
+                          height: "20px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                        }}
                       >
                         ×
                       </span>
@@ -336,16 +464,222 @@ const AddBlog = () => {
                 </div>
               </div>
             </div>
-            {/* Blog Content */}
-            <div className="add-video-test-container">
-              <p className="client-name-paraa">Blog Content</p>
-              <QuillTextEditor
+            <div
+              className="add-video-test-container"
+              style={{ marginTop: "20px" }}
+            >
+              <p className="client-name-paraa">Blog Description</p>
+              <textarea
+                className="client-naMe-Input"
+                style={{ height: "120px", resize: "vertical" }}
                 value={blogContent}
-                onChange={(value) => setBlogContent(value)}
-                height={300}
+                onChange={(e) => setBlogContent(e.target.value)}
+                placeholder="Write a short description about the blog..."
               />
             </div>
-            {/* List on Website */}
+
+            {contentBlocks.map((block, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "24px",
+                }}
+              >
+                {/* Blog Media */}
+                <div className="add-video-test-container">
+                  <p className="client-name-paraa">
+                    Add Media (Image or Video)
+                  </p>
+                  <Upload
+                    showUploadList={false}
+                    onChange={(info) => handleMediaChange(info.file, index)}
+                    fileList={fileLists[index] || []}
+                    beforeUpload={(file) => {
+                      const isAllowedType = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif",
+                        "image/webp",
+                        "video/mp4",
+                        "video/webm",
+                        "video/ogg",
+                      ].includes(file.type);
+
+                      if (!isAllowedType) {
+                        message.error(
+                          "Only images (jpg, png, gif, webp) and videos (mp4/webm/ogg) allowed"
+                        );
+                        return Upload.LIST_IGNORE;
+                      }
+                      return false; // ✅ prevents auto-upload
+                    }}
+                  >
+                    <button className="Upload-button-reuable">
+                      <img
+                        style={{ width: "24px", height: "24px" }}
+                        src="/Images/Project/Cloud-Upload.svg"
+                        alt="upload"
+                      />
+                      Upload Media
+                    </button>
+                  </Upload>
+
+                  {(block.media || block.mediaUrl) && (
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "120px",
+                        height: "120px",
+                        border: "1px dashed #ccc",
+                        borderRadius: "8px",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {block.media ? (
+                        // 🆕 Show NEW uploaded file
+                        block.media.type.startsWith("image/") ? (
+                          <img
+                            src={URL.createObjectURL(block.media)}
+                            alt="preview"
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                          />
+                        ) : (
+                          <video
+                            src={URL.createObjectURL(block.media)}
+                            controls
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                          />
+                        )
+                      ) : block.mediaType === "image" && block.mediaUrl ? (
+                        // ✅ Show EXISTING image from backend
+                        <img
+                          src={block.mediaUrl}
+                          alt="existing"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : block.mediaType === "video" && block.mediaUrl ? (
+                        // ✅ Show EXISTING video from backend
+                        <video
+                          src={block.mediaUrl}
+                          controls
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : null}
+
+                      {/* ❌ Remove button */}
+                      <span
+                        onClick={() => {
+                          const updated = [...contentBlocks];
+                          updated[index].media = null;
+                          updated[index].mediaUrl = null;
+                          updated[index].mediaType = null;
+                          setContentBlocks(updated);
+                        }}
+                        style={{
+                          position: "absolute",
+                          top: "4px",
+                          right: "6px",
+                          background: "#fff",
+                          borderRadius: "50%",
+                          width: "20px",
+                          height: "20px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                        }}
+                      >
+                        ×
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Blog Text */}
+                <div className="add-video-test-container">
+                  <p className="client-name-paraa">Blog Text</p>
+                  <ReactQuill
+                    theme="snow"
+                    value={block.text}
+                    onChange={(value) => handleTextChange(value, index)}
+                    modules={{
+                      toolbar: [
+                        [{ header: [1, 2, 3, false] }],
+                        ["bold", "italic", "underline", "strike"],
+                        [{ list: "ordered" }, { list: "bullet" }],
+                        ["blockquote"],
+                        ["clean"],
+                      ],
+                    }}
+                    formats={[
+                      "header",
+                      "bold",
+                      "italic",
+                      "underline",
+                      "strike",
+                      "list",
+                      "bullet",
+                      "blockquote",
+                    ]}
+                    style={{
+                      height: "250px",
+                      borderRadius: "8px",
+                      backgroundColor: "#fff",
+                      border: "none",
+                      overflow: "hidden",
+                    }}
+                  />
+                </div>
+
+                {/* Remove button for each block */}
+                {contentBlocks.length > 1 && (
+                  <button
+                    style={{
+                      background: "red",
+                      border: "none",
+                      color: "white",
+                      width: "fit-content",
+                      padding: "8px 12px",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => removeContentBlock(index)}
+                  >
+                    Remove This Section
+                  </button>
+                )}
+              </div>
+            ))}
+
+            {/* Add More Button */}
+            <button
+              type="button"
+              className="Upload-button-reuable"
+              style={{ width: "fit-content" }}
+              onClick={addContentBlock}
+            >
+              + Add More Content
+            </button>
+
             <div
               className="add-video-test-container"
               style={{ display: "flex", gap: "12px", flexDirection: "column" }}
