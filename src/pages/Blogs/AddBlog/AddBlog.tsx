@@ -386,7 +386,15 @@ const AddBlog = () => {
                   <Upload
                     accept="image/*"
                     showUploadList={false}
-                    beforeUpload={() => false} // <--- required!
+                    beforeUpload={(file) => {
+                      // ✅ Size check: 15MB
+                      const isLt15MB = file.size / 1024 / 1024 <= 15;
+                      if (!isLt15MB) {
+                        message.error("Image must be smaller than 15MB!");
+                        return Upload.LIST_IGNORE; // 🚫 Prevent file from being added
+                      }
+                      return false; // Prevent auto-upload
+                    }}
                     onChange={handleImageChange}
                   >
                     <button className="Upload-button-reuable">
@@ -510,9 +518,15 @@ const AddBlog = () => {
                         );
                         return Upload.LIST_IGNORE;
                       }
-                      const isLt15M = file.size / 1024 / 1024 < 15; // ✅ size check in MB
-                      if (!isLt15M) {
-                        message.error("File must be smaller than 15MB!");
+                      const isImage = file.type.startsWith("image/");
+                      const maxSizeMB = isImage ? 15 : 50; // 15MB for images, 50MB for videos
+
+                      if (file.size / 1024 / 1024 > maxSizeMB) {
+                        message.error(
+                          `${
+                            isImage ? "Image" : "Video"
+                          } must be smaller than ${maxSizeMB}MB!`
+                        );
                         return Upload.LIST_IGNORE;
                       }
                       return false; // ✅ prevents auto-upload

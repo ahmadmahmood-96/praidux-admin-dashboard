@@ -198,7 +198,11 @@ const AddProject = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
             <button className="BackNavigation" onClick={() => navigate(-1)}>
-              <img src="/Images/Project/back.svg" alt="Back"  className="BackArrow"/>
+              <img
+                src="/Images/Project/back.svg"
+                alt="Back"
+                className="BackArrow"
+              />
               Back
             </button>
             <div style={{ display: "flex", gap: "8px" }}>
@@ -350,6 +354,11 @@ const AddProject = () => {
                         );
                         return Upload.LIST_IGNORE; // Prevent file from being added
                       }
+                      const isLt15MB = file.size / 1024 / 1024 <= 15;
+                      if (!isLt15MB) {
+                        message.error("Image must be smaller than 15MB!");
+                        return Upload.LIST_IGNORE;
+                      }
                       return false; // Prevent auto-upload
                     }}
                   >
@@ -401,10 +410,18 @@ const AddProject = () => {
                 >
                   <Upload
                     showUploadList={false}
-                      accept="video/*"
+                    accept="video/*"
                     onChange={handleVideoChange}
                     fileList={videoFile ? [videoFile] : []}
-                    beforeUpload={() => false}
+                    beforeUpload={(file) => {
+                      // ✅ 50MB size check
+                      const isLt50MB = file.size / 1024 / 1024 <= 50;
+                      if (!isLt50MB) {
+                        message.error("Video must be smaller than 50MB!");
+                        return Upload.LIST_IGNORE; // 🚫 Prevent adding file
+                      }
+                      return false; // Prevent auto-upload
+                    }}
                   >
                     <button className="Upload-button-reuable">
                       <img
@@ -461,6 +478,11 @@ const AddProject = () => {
                         "Only JPG, PNG, GIF, and WEBP images are allowed"
                       );
                       return Upload.LIST_IGNORE; // Prevent file from being added
+                    }
+                    const isLt15MB = file.size / 1024 / 1024 <= 15;
+                    if (!isLt15MB) {
+                      message.error(`${file.name} must be smaller than 15MB!`);
+                      return Upload.LIST_IGNORE; // 🚫 Block oversized file
                     }
                     return false; // Prevent auto-upload
                   }}

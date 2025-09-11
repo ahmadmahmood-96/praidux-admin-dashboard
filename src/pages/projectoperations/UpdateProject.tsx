@@ -502,6 +502,11 @@ const UpdateProject = () => {
                         );
                         return Upload.LIST_IGNORE; // Prevent file from being added
                       }
+                      const isLt15MB = file.size / 1024 / 1024 <= 15;
+                      if (!isLt15MB) {
+                        message.error("Image must be smaller than 15MB!");
+                        return Upload.LIST_IGNORE;
+                      }
                       return false; // Prevent auto-upload
                     }}
                     showUploadList={false}
@@ -593,10 +598,10 @@ const UpdateProject = () => {
                     onChange={handleVideoChange}
                     fileList={videoFile ? [videoFile] : []}
                     beforeUpload={(file) => {
-                      const isUnder20MB = file.size / 1024 / 1024 < 20;
-                      if (!isUnder20MB) {
-                        message.error("Video must be smaller than 20MB!");
-                        return Upload.LIST_IGNORE; // ✅ Prevent file from being added
+                      const isLt50MB = file.size / 1024 / 1024 <= 50;
+                      if (!isLt50MB) {
+                        message.error("Video must be smaller than 50MB!");
+                        return Upload.LIST_IGNORE; // 🚫 Prevent adding file
                       }
                       return false; // ✅ Prevent auto-upload
                     }}
@@ -687,6 +692,11 @@ const UpdateProject = () => {
                         "Only JPG, PNG, GIF, and WEBP images are allowed"
                       );
                       return Upload.LIST_IGNORE; // Prevent file from being added
+                    }
+                    const isLt15MB = file.size / 1024 / 1024 <= 15;
+                    if (!isLt15MB) {
+                      message.error(`${file.name} must be smaller than 15MB!`);
+                      return Upload.LIST_IGNORE; // 🚫 Block oversized file
                     }
                     return false; // Prevent auto-upload
                   }}

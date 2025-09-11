@@ -221,6 +221,12 @@ const AddStaticTestimonial = () => {
                         );
                         return Upload.LIST_IGNORE; // Prevent file from being added
                       }
+                      const isLt15MB = file.size / 1024 / 1024 <= 15;
+                      if (!isLt15MB) {
+                        message.error("Image must be smaller than 15MB!");
+                        return Upload.LIST_IGNORE; // 🚫 Stop adding file
+                      }
+
                       return false; // Prevent auto-upload
                     }}
                   >
@@ -340,6 +346,12 @@ const AddStaticTestimonial = () => {
                         );
                         return Upload.LIST_IGNORE; // Prevent file from being added
                       }
+                      const isLt15MB = file.size / 1024 / 1024 <= 15;
+                      if (!isLt15MB) {
+                        message.error("Image must be smaller than 15MB!");
+                        return Upload.LIST_IGNORE; // 🚫 Stop adding file
+                      }
+
                       return false; // Prevent auto-upload
                     }}
                   >

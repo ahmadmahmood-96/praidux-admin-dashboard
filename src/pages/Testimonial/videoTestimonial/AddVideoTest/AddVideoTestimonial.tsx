@@ -122,7 +122,11 @@ const AddVideoTestimonial = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
             <button className="BackNavigation" onClick={() => navigate(-1)}>
-              <img src="/Images/Project/back.svg" alt="Back" className="BackArrow"/>
+              <img
+                src="/Images/Project/back.svg"
+                alt="Back"
+                className="BackArrow"
+              />
               Back
             </button>
             <div style={{ display: "flex", gap: "8px" }}>
@@ -263,33 +267,44 @@ const AddVideoTestimonial = () => {
                   }}
                 >
                   <Upload
-                   accept="video/*"
+                    accept="video/*"
                     showUploadList={false}
                     onChange={handleLogoChange}
                     fileList={logoFile ? [logoFile] : []}
-                    beforeUpload={() => false}
+                    // beforeUpload={() => false}
+                    beforeUpload={(file) => {
+                      const isLt50MB = file.size / 1024 / 1024 <= 50;
+                      if (!isLt50MB) {
+                        message.error("video must be smaller than 50MB!");
+                        return Upload.LIST_IGNORE; // 🚫 Stop adding file
+                      }
+
+                      return false; // ✅ keep manual upload behavior
+                    }}
                   >
                     {!logoFile && videoUrl && (
-                      <div  style={{
+                      <div
+                        style={{
                           width: "200px",
                           height: "150px",
                           borderRadius: "8px",
                           overflow: "hidden",
                           border: "1px dashed #ccc",
                           position: "relative",
-                          marginBottom:"10px",
-                        }}>
-                      <video
-                        src={videoUrl}
-                        controls
-                        width="100%"
-                        style={{
-                          maxWidth: "100%",
-                          height:"100%",
-                          borderRadius: "8px",
-                          backgroundColor: "#000",
+                          marginBottom: "10px",
                         }}
-                      />
+                      >
+                        <video
+                          src={videoUrl}
+                          controls
+                          width="100%"
+                          style={{
+                            maxWidth: "100%",
+                            height: "100%",
+                            borderRadius: "8px",
+                            backgroundColor: "#000",
+                          }}
+                        />
                       </div>
                     )}
 
