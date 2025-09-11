@@ -42,34 +42,35 @@ const AddBlog = () => {
   const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>([
     { media: null, text: "" },
   ]);
- // Handle media change
-const handleMediaChange = (file: any, index: number) => {
-  const updated = [...contentBlocks];
+  // Handle media change
+  const handleMediaChange = (file: any, index: number) => {
+    const updated = [...contentBlocks];
 
-  if (file instanceof File) {
-    updated[index].media = file;
-  } else if (file.originFileObj instanceof File) {
-    updated[index].media = file.originFileObj;
-  } else {
-    console.warn("⚠️ No valid file found", file);
-  }
+    if (file instanceof File) {
+      updated[index].media = file;
+    } else if (file.originFileObj instanceof File) {
+      updated[index].media = file.originFileObj;
+    } else {
+      console.warn("⚠️ No valid file found", file);
+    }
 
-  setContentBlocks(updated);
+    setContentBlocks(updated);
 
-  // ✅ update Upload's fileList so AntD tracks it
-  setFileLists((prev) => ({
-    ...prev,
-    [index]: [
-      {
-        uid: `${Date.now()}`,
-        name: file.name || `media-${index}`,
-        status: "done",
-        url: updated[index].media ? URL.createObjectURL(updated[index].media) : updated[index].mediaUrl,
-      } as UploadFile,
-    ],
-  }));
-};
-
+    // ✅ update Upload's fileList so AntD tracks it
+    setFileLists((prev) => ({
+      ...prev,
+      [index]: [
+        {
+          uid: `${Date.now()}`,
+          name: file.name || `media-${index}`,
+          status: "done",
+          url: updated[index].media
+            ? URL.createObjectURL(updated[index].media)
+            : updated[index].mediaUrl,
+        } as UploadFile,
+      ],
+    }));
+  };
 
   // Handle text change
   const handleTextChange = (value: string, index: number) => {
@@ -116,14 +117,18 @@ const handleMediaChange = (file: any, index: number) => {
       return;
     }
     const hasValidBlock = contentBlocks.some(
-    (block) =>
-      (block.media || block.mediaUrl) && block.text && block.text.trim() !== ""
-  );
+      (block) =>
+        (block.media || block.mediaUrl) &&
+        block.text &&
+        block.text.trim() !== ""
+    );
 
-  if (!hasValidBlock) {
-    message.warning("Please add at least one content block with media and text");
-    return;
-  }
+    if (!hasValidBlock) {
+      message.warning(
+        "Please add at least one content block with media and text"
+      );
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -210,17 +215,14 @@ const handleMediaChange = (file: any, index: number) => {
             Array.isArray(data.contentBlocks) &&
             data.contentBlocks.length > 0
           ) {
-            // ✅ Populate contentBlocks
             setContentBlocks(
               data.contentBlocks.map((block: any) => ({
                 text: block.text || "",
                 mediaUrl: block.mediaUrl || null,
                 mediaType: block.mediaType || null,
-                media: null, // fresh upload will overwrite this
+                media: null,
               }))
             );
-
-            // ✅ Populate Upload fileLists (for previews)
             const initialFileLists: { [key: number]: UploadFile[] } = {};
             data.contentBlocks.forEach((block: any, idx: number) => {
               if (block.mediaUrl) {
@@ -229,7 +231,7 @@ const handleMediaChange = (file: any, index: number) => {
                     uid: `-${idx}`,
                     name: `media-${idx}`,
                     status: "done",
-                    url: block.mediaUrl, // 👈 show existing file
+                    url: block.mediaUrl,
                   } as UploadFile,
                 ];
               }
@@ -237,16 +239,11 @@ const handleMediaChange = (file: any, index: number) => {
             setFileLists(initialFileLists);
           }
         })
-       .catch(() => {
-  message.error("Failed to load blog data");
-});
-
+        .catch(() => {
+          message.error("Failed to load blog data");
+        });
     }
   }, [id]);
-
-  // console.log("blogImageFile:", blogImageFile);
-  // console.log("blogImageUrl:", blogImageUrl);
-
   return (
     <>
       {isSubmitting && <LoadingSpinner isLoading={true} />}
@@ -511,6 +508,11 @@ const handleMediaChange = (file: any, index: number) => {
                         message.error(
                           "Only images (jpg, png, gif, webp) and videos (mp4/webm/ogg) allowed"
                         );
+                        return Upload.LIST_IGNORE;
+                      }
+                      const isLt15M = file.size / 1024 / 1024 < 15; // ✅ size check in MB
+                      if (!isLt15M) {
+                        message.error("File must be smaller than 15MB!");
                         return Upload.LIST_IGNORE;
                       }
                       return false; // ✅ prevents auto-upload
